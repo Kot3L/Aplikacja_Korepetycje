@@ -1,0 +1,50 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+header {
+    width: 100vw;
+    height: 10vh;
+    background-color: #012676;
+    text-align: center;
+    color: white;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #012676;
+    height: 90vh;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    width: 30vw;
+    background-color: red;
+    height: 60vh;
+    align-items: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 20vw;
+    background-color: brown;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.Welcome_text {
+    text-align: left;
+    width: 30vw;
+    background-color: chartreuse;
+}
+
+input {
+    width: 15vw;
+    height: 5vh;
+}

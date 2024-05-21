@@ -1,0 +1,68 @@
+/*Header*/
+
+header {
+    background-color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-right: 2rem;
+    margin-left: 2rem;
+}
+
+h1 {
+    color: #012676;
+}
+
+.logo {
+    width: 100px;
+    height: 100px;
+    padding: 0;
+    margin: 0;
+}
+
+
+/*Main*/
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin: 1rem;
+}
+
+article {
+    background-color: #979797;
+    flex-basis: 31%;
+    height: 200px;
+    margin: 1rem;
+    box-shadow: 5px 5px rgb(125, 125, 125);
+    border-radius: 10px;
+}
+
+
+/*Footer*/
+
+nav {
+    display: flex;
+    flex-direction: row;
+}
+
+#li1 {
+    background-image: url(pic1.png);
+}
+
+#li2 {
+    background-image: url(pic2.png);
+}
+
+#li3 {
+    background-image: url(pic3.png);
+}
+
+#li4 {
+    background-image: url(pic4.png);
+}
+
+#li5 {
+    background-image: url(pic5.png);
+}
