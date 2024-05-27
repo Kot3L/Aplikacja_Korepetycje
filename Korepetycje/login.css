@@ -1,6 +1,5 @@
 * :not(p) {
     margin: 0;
-    color: white;
     font-family: "Inter", sans-serif;
     font-optical-sizing: auto;
     font-weight: 700;
@@ -17,6 +16,7 @@ header {
     justify-content: center;
     background-color: #012676;
     padding-top: 3rem;
+    color: white;
 }
 
 /*Main*/
@@ -30,6 +30,8 @@ main {
     height: 90vh;
     width: 100%;
     flex-direction: column;
+    color: white;
+
 }
 
 /*Form*/
@@ -71,6 +73,10 @@ input {
     border: none;
     margin-top: 1rem;
     width: 15vw;
+}
+
+a {
+    color: white;
 }
 
 /*Responsywnosc*/
