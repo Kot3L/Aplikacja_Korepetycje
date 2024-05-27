@@ -1,15 +1,26 @@
-* {
-    padding: 0;
+* :not(p) {
     margin: 0;
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-variation-settings:
+        "slnt" 0;
 }
 
+/*Header*/
+
 header {
-    width: 100vw;
-    height: 10vh;
+    display: flex;
+    width: 100%;
+    justify-content: center;
     background-color: #012676;
-    text-align: center;
-    color: white;
+    padding-top: 3rem;
 }
+
+/*Main*/
+
 
 main {
     display: flex;
@@ -17,34 +28,77 @@ main {
     align-items: center;
     background-color: #012676;
     height: 90vh;
+    width: 100%;
+    flex-direction: column;
 }
 
-section {
-    display: flex;
-    flex-direction: column;
-    color: white;
-    width: 30vw;
-    background-color: red;
-    height: 60vh;
-    align-items: center;
-}
+/*Form*/
 
 form {
     display: flex;
     flex-direction: column;
-    width: 20vw;
-    background-color: brown;
+    width: 100%;
     align-items: center;
     justify-content: space-around;
 }
 
+form>label {
+    align-self: flex-start;
+}
+
+
 .Welcome_text {
     text-align: left;
-    width: 30vw;
-    background-color: chartreuse;
+    padding-bottom: 3rem;
 }
 
 input {
-    width: 15vw;
+    width: 20vw;
     height: 5vh;
+    border-radius: 2px;
+    border: none;
+}
+
+.password,
+.repassword {
+    margin-top: 2rem;
+}
+
+.submit {
+    background-color: #F9B521;
+    border-radius: 5px;
+    height: 6vh;
+    border: none;
+    margin-top: 1rem;
+    width: 15vw;
+}
+
+/*Responsywnosc*/
+
+@media(max-width: 426px) {
+    .Welcome_text {
+        width: 70%;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    .submit {
+        width: 70%;
+    }
+}
+
+@media(max-width: 768px) {
+    input {
+        width: 100%;
+    }
+
+    .submit {
+        width: 75%;
+    }
+
+    .Welcome_text {
+        width: 40%;
+    }
 }
