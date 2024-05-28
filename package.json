@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "mongoose": "^8.4.0"
+  },
+  "name": "aplikacja_korepetycje",
+  "version": "1.0.0",
+  "description": "!DAC CONNECTION STRING Z MONGO ATLASA DO GITIGNORE!\r Zrobic baze danych w mongo atlas w chmurze, zeby byla dostepna z jakiejkolwiek maszyny",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
