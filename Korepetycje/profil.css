@@ -1,62 +1,85 @@
-body *{
+body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Header */
 
-/* HEADER */
-
-header{
+header {
     height: 10vh;
     width: 60%;
+    padding: 1em;
+    background-color: aqua;
 }
 
 h1 {
-    padding: 1em;
     color: #012676;
+    font-size: 3rem;
 }
 
-/* MAIN */
+/* Main */
 
 main {
     height: 80vh;
-}
-
-.options{
-
-    width: 40vw;
-    height: 40vh;
-    background-color: aqua; 
+    width: 60%;
     display: flex;
-    justify-content: space-evenly;
-    
-}
-
-.blue{
-
-    width:40%;
-    height: 40%;
-    background-color: aliceblue;
-    
-}
-
-.red{
-
-    width:40%;
-    height: 40%;
-    background-color:red; 
 
 }
-/* FOOTER */
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 60%;
+    gap: 2em;
+    background-color: blueviolet;
+}
+
+.block {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #012676;
+    border-radius: 4px;
+    color: white;
+    font-weight: lighter;
+}
+
+.red {
+    background-color: red;
+}
+
+.block img {
+    width: 20%;
+    height: auto;
+    object-fit: cover;
+}
+
+aside {
+    width: 40%;
+    background-color: brown;
+    height: 100%;
+}
+
+.bi-star-fill {
+    color: yellow;
+}
+
+/* Footer */
 
 footer {
     display: flex;
     justify-content: center;
     width: 100%;
+    height: 10vh;
+    bottom: 0;
+    position: fixed;
+    margin-bottom: 5vh;
 }
 
-.icon-container{
+.icon-container {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -65,16 +88,19 @@ footer {
     width: 90%;
 }
 
-i {
-    padding-top: 1em;
+a {
     scale: 2;
+    padding-top: 1em;
+    color: black;
+    transition: ease-in-out 0.3s;
 }
 
-i:hover{
+a:hover {
     color: #F9B521;
     cursor: pointer;
+    transition: ease-in-out 0.3s;
 }
 
-i:active{
+.active {
     color: #F9B521;
 }

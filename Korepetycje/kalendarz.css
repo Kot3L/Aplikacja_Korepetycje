@@ -12,7 +12,7 @@ body {
         "foot foot foot";
 }
 
-/*Header*/
+/* Header */
 
 header {
     grid-area: head;
@@ -32,18 +32,19 @@ h1 {
 
 .logo {
     width: 14vw;
-    height: 9vw;
+    height: auto;
     padding: 0;
     margin-right: 2vw;
 }
 
-
-/*Main*/
+/* Main */
 
 main {
     grid-area: main;
 }
-/*Footer*/
+
+/* Footer */
+
 footer {
     grid-area: foot;
     display: flex;
@@ -64,34 +65,42 @@ img {
     width: 4vw;
     height: 4vw;
 }
+
 @media(max-width: 426px) {
 
 }
 
 @media(max-width: 768px) {
-    .container{
+    .container {
         grid-template-rows: 0.3fr 2.5fr 0.2fr;
     }
-    /* header */
-    h1{
+
+    /* Header */
+
+    h1 {
         margin-top: 4vw;
         margin-left: 6vw;
     }
-    .logo{
+    
+    .logo {
         display: none;
     }
-    /* main */
+
+    /* Main */
+
     main {
         grid-area: main;
     }
     
-    /* footer */
+    /* Footer */
+
     footer {
         position:fixed;
         bottom: 0;
         background-color: #fff;
     }
-    img{
+
+    img {
         height: 8vw;
         width: 8vw;
     }

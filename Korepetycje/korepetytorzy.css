@@ -1,45 +1,57 @@
-html{
+html {
     overflow-y: hidden;
 }
-body{
+
+body {
     margin: 0;
     background-color: #fff;
 }
 
 /* Header */
 
-header{
+header {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+    height: 10vh;
+    justify-content: space-between;
+    align-items: center;
 }
 
-h1{
-    padding: 1em;
+h1 {
+    padding: .5em;
     color: #012676;
+    font-size: 4rem;
+}
+
+.logo {
+    width: 8rem;
+    height: auto;
+    padding: 0;
+    margin-right: 2vw;
 }
 
 /* Main */
 
-main{
+main {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin: 4rem;
+    margin-top: 12vh;
 }
 
 /* Form */
 
-form{
+form {
     display: flex;
     flex-direction: column;
 }
 
-form *{
+form * {
     margin: .5rem;
 }
 
-input{
+input {
     background-color: #D4D4D8;
     color: white;
     border: none;
@@ -51,13 +63,24 @@ input{
 
 ::placeholder {
     color: white;
-  }
+    font-size: 1rem;
+}
 
-#submit{
+#submit {
     background-color: #F9B521;
     align-self: center;
     width: 70%;
     border-radius: 5px;
+}
+
+#opis{
+    padding: .5rem;
+    resize: none;
+    background-color: #D4D4D8;
+    color: white;
+    height: 6rem;
+    border: none;
+    border-radius: 2px;
 }
 
 /* Footer */
@@ -66,9 +89,13 @@ footer {
     display: flex;
     justify-content: center;
     width: 100%;
+    height: 10vh;
+    bottom: 0;
+    position: fixed;
+    margin-bottom: 5vh;
 }
 
-.icon-container{
+.icon-container {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -77,17 +104,38 @@ footer {
     width: 90%;
 }
 
-i {
-    padding-top: 1em;
+a {
     scale: 2;
+    padding-top: 1em;
+    color: black;
     transition: ease-in-out 0.3s;
 }
 
-i:hover{
+a:hover {
     color: #F9B521;
     cursor: pointer;
+    transition: ease-in-out 0.3s;
 }
 
-.active{
+.active {
     color: #F9B521;
+}
+
+/* Responsywnosc */
+
+@media(max-width: 376px) {
+    form * {
+        width: 90%;
+    }
+
+    .logo {
+        display: none;
+    }
+}
+
+
+@media(max-width: 769px) {
+    :root {
+        font-size: 10px;
+    }
 }
