@@ -5,7 +5,7 @@ body {
 .container {
     display: grid;
     grid-template-columns: 0.9fr 1.2fr 0.9fr;
-    grid-template-rows: 0.4fr 2.4fr 0.2fr;
+    grid-template-rows: 0.4fr 3.6fr 0.2fr;
     grid-template-areas:
         "head head head"
         "main main main"
@@ -20,22 +20,21 @@ header {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-right: 2rem;
-    margin-left: 2rem;
+    margin-right: 2vw;
+    margin-left: 2vw;
 }
 
 h1 {
     color: #012676;
-    font-size: 4rem;
-    font-family: Arial, Helvetica, sans-serif;
+    font-size: 4vw;
+    margin-top: 2vw;
 }
 
 .logo {
-    width: 14rem;
-    height: 7rem;
+    width: 12vw;
+    height: 9vw;
     padding: 0;
-    margin-right: 2rem;
-    margin-top: 2rem;
+    margin-right: 2vw;
 }
 
 
@@ -53,10 +52,10 @@ main {
 article {
     background-color: #E4E4E7;
     flex-basis: 31%;
-    height: 19rem;
-    margin: 1rem;
-    box-shadow: 5px 5px rgb(177, 177, 177);
-    border-radius: 10px;
+    height: 40%;
+    margin: 1%;
+    box-shadow: 0.5vw 0.5vw rgb(177, 177, 177);
+    border-radius: 1vw;
 }
 
 
@@ -65,8 +64,8 @@ footer {
     grid-area: foot;
     display: flex;
     justify-content: center;
-    border-top: 1rem solid #E4E4E7;
-    padding-top: 10px;
+    border-top: 1vw solid #E4E4E7;
+    padding-top: 1vw;
     width: 93%;
     justify-self: center;
 }
@@ -74,30 +73,56 @@ footer {
 nav {
     display: flex;
     flex-direction: row;
-    gap: 4rem;
+    gap: 4vw;
 }
 
 img {
-    width: 5rem;
-    height: 5rem;
+    width: 4vw;
+    height: 4vw;
+}
+@media(max-width: 426px) {
+
 }
 
-#li1 {
-    background-image: url(img/pic1.png);
-}
-
-#li2 {
-    background-image: url(img/pic2.png);
-}
-
-#li3 {
-    background-image: url(img/pic3.png);
-}
-
-#li4 {
-    background-image: url(img/pic4.png);
-}
-
-#li5 {
-    background-image: url(img/pic5.png);
+@media(max-width: 768px) {
+    .container{
+        grid-template-rows: 0.3fr 2.5fr 0.2fr;
+    }
+    /* header */
+    h1{
+        margin-top: 4vw;
+        margin-left: 6vw;
+        font-size: 6vw;
+    }
+    .logo{
+        display: none;
+    }
+    /* main */
+    main {
+        grid-area: main;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    article {
+        background-color: #E4E4E7;
+        flex-basis: 80%;
+        height: 35vw;
+        margin: 3vw;
+        box-shadow: 0.5vw 0.5vw rgb(177, 177, 177);
+        border-radius: 1vw;
+    }
+    /* footer */
+    footer {
+        position:fixed;
+        bottom: 0;
+        background-color: #fff;
+    }
+    img{
+        height: 8vw;
+        width: 8vw;
+    }
 }
