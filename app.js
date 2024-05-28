@@ -64,7 +64,7 @@ app.on('error', (error) => {
 // Gracefully shut down the server on SIGINT (Ctrl+C) or SIGTERM (termination signal)
 process.on('SIGINT', () => {
   console.log('Received SIGINT. Shutting down gracefully...');
-  server.close(() => {
+  app.close(() => {
     console.log('Server has stopped');
     process.exit(0);
   });
@@ -72,7 +72,7 @@ process.on('SIGINT', () => {
 
 process.on('SIGTERM', () => {
   console.log('Received SIGTERM. Shutting down gracefully...');
-  server.close(() => {
+  app.close(() => {
     console.log('Server has stopped');
     process.exit(0);
   });
