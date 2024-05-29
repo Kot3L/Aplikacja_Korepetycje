@@ -3,10 +3,10 @@ const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cnctionString = require('./cnctionString.js');
 
 const port = 3000;
 const routes = require('./routes/index')
-const cnctionString = "mongodb://localhost:27017/Korepetycje";
 
 
 
@@ -38,17 +38,28 @@ const FormSchema = new mongoose.Schema({
 });
 const FormModel = mongoose.model('Form', FormSchema);
 
-// Route to handle form submission
-app.post('/submit-form', (req, res) => {
-  const formData = new FormModel(req.body);
-  formData.save()
-    .then(() => {
-      res.send('Form data saved successfully!');
-    })
-    .catch((err) => {
-      res.status(500).send('Failed to save form data');
-      console.error(err);
-    });
+app.post('/submit-form', async (req, res) => {
+  console.log('Form data received:', req.body);
+  
+  // Check for existing data with the same email
+  try {
+    const existingData = await FormModel.findOne({ email: req.body.email });
+    if (existingData) {
+      // If a match is found, send an appropriate response
+      res.status(400).send('Data with this email already exists.');
+      setTimeout(() => {
+        res.redirect('/index.html');
+      }, 2000);
+    } else {
+      // If no match is found, save the new data
+      const formData = new FormModel(req.body);
+      await formData.save();
+      res.redirect('/login.html');  // Redirect with query parameter
+    }
+  } catch (err) {
+    console.error('Failed to save form data:', err);
+    res.status(500).send('Failed to save form data');
+  }
 });
 
 //Server responses section
