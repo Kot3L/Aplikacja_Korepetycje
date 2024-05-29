@@ -51,7 +51,7 @@ app.post('/submit-form', (req, res) => {
     });
 });
 
-//Server responses
+//Server responses section
 app.listen(port, () => {
     console.log(`Serwer działa pod adresem http://localhost:${port}`);
   });
