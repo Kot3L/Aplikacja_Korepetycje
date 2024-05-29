@@ -1,54 +1,63 @@
-body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* body */
 
-/* Header */
+body{
 
-header {
-    height: 10vh;
-    width: 60%;
-    padding: 1em;
-    background-color: aqua;
-}
-
-h1 {
-    color: #012676;
-    font-size: 3rem;
-}
-
-/* Main */
-
-main {
-    height: 80vh;
-    width: 60%;
     display: flex;
 
+}
+
+/* header */
+
+header{
+
+    width: 70vw;
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+h1{
+    padding: .5em;
+    color: #012676;
+    font-size: 4rem;
+}
+
+
+/* section */
+
+section{
+
+    width: 70vw;
+    height: 40vh;
 }
 
 .container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    width: 60%;
-    gap: 2em;
-    background-color: blueviolet;
+    gap: 2rem;
+    width: 90%;
+    max-width: 600px;
+    padding-left: 2rem;
+    padding-top: 15vh;
 }
-
 .block {
+    background-color: #012676;
     padding: 10px;
+    border-radius: 3px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #012676;
-    border-radius: 4px;
     color: white;
-    font-weight: lighter;
+    font-weight: 100;
+    font-size: large;
+    
 }
 
-.red {
-    background-color: red;
+.block:last-child{
+
+    background-color: #df0000;
+
 }
 
 .block img {
@@ -57,17 +66,47 @@ main {
     object-fit: cover;
 }
 
-aside {
-    width: 40%;
-    background-color: brown;
-    height: 100%;
+aside{
+
+    width: 40vw;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    
 }
 
-.bi-star-fill {
-    color: yellow;
+aside > img{
+
+    width: 18rem;
+    height: 18rem;
+    border-radius: 100%;
+
 }
 
-/* Footer */
+.stars_container{
+
+    width: 18rem;
+
+}
+
+.stars_container > img{
+
+    width: 18rem;
+    height: 4rem;
+
+}
+
+.info_container{
+
+    width: 18rem;
+    font-size: 0.8rem;
+
+}
+
+/* footer */
 
 footer {
     display: flex;
@@ -103,4 +142,27 @@ a:hover {
 
 .active {
     color: #F9B521;
+}
+
+
+/* responsywanosc */
+
+@media (max-width: 680px) {
+    .container {
+        grid-template-columns: 1fr;
+        padding-top: 2vh;
+    }
+    
+}
+
+@media (max-width: 980px) {
+    aside{
+        display: none;
+    }
+
+    section{
+
+        width: 60vw;
+
+    }
 }
