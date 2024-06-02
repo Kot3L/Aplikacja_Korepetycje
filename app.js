@@ -47,9 +47,6 @@ app.post('/submit-form', async (req, res) => {
     if (existingData) {
       // If a match is found, send an appropriate response
       res.status(400).send('Data with this email already exists.');
-      setTimeout(() => {
-        res.redirect('/index.html');
-      }, 2000);
     } else {
       // If no match is found, save the new data
       const formData = new FormModel(req.body);
@@ -59,6 +56,26 @@ app.post('/submit-form', async (req, res) => {
   } catch (err) {
     console.error('Failed to save form data:', err);
     res.status(500).send('Failed to save form data');
+  }
+});
+
+
+//Login section
+
+app.post('/login-form', async (req, res) =>{
+
+  try{
+    const existingDataBlock = await FormModel.findOne(
+      {email: req.body.email, 
+      password: req.body.password});
+    if(existingDataBlock){
+      res.redirect('/main.html');
+    }else{
+      res.status(404).send('There is no such data located in the database');
+    }
+  }catch(err){
+    console.error('Error retrieving the data:', err);
+    res.status(500).send('Internal server error ');
   }
 });
 
