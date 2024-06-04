@@ -133,12 +133,20 @@ function isAuthenticated(req, res, next) {
   }
 }
 
+app.get('/korepetytorzy.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'korepetytorzy.html'));
+});
+
 app.get('/add_korepetycje.html', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'add_korepetycje.html'));
 });
 
 app.get('/glowna.html', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'glowna.html'));
+});
+
+app.get('/kalendarz.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'kalendarz.html'));
 });
 
 app.get('/profil.html', isAuthenticated, (req, res) => {
