@@ -17,12 +17,4 @@ router.get('/login.html', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'views', 'login.html'));
 });
 
-router.get('/main.html', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'main.html'));
-});
-
-router.get('/profil.html', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'profil.html'));
-});
-
 module.exports = router;

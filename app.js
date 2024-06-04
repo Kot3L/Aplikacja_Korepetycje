@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const cnctionString = require('./cnctionString.js');
 
 const port = 3000;
-const routes = require('./routes/index')
+const routes = require('./routes/index') //!!naprawic
 
 
 //session middleware
@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', routes);
+app.use('/', routes); //!!naprawic
 
 
 //MongoDB section///
@@ -101,18 +101,6 @@ function isAuthenticated(req, res, next) {
     res.redirect('/login.html');
   }
 }
-
-app.get('/', (req, res)=>{
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
-})
-
-app.get('/index.html', (req, res) =>{
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
-})
-
-app.get('/login.html', (req, res) =>{
-  res.sendFile(path.join(__dirname, 'views', 'login.html'));
-})
 
 app.get('/main.html', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'main.html'));

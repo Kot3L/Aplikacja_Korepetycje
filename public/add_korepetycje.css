@@ -1,0 +1,21 @@
+@media(max-width: 376px){
+    main{
+        margin-top: 10rem;
+    }
+}
+
+
+@media(max-width: 468px){
+    .logo{
+        display: none;
+    }
+}
+
+
+@media(max-width: 776px) and (min-width: 468px){
+    .logo{
+        width: 6rem;
+    }
+}
+
+
