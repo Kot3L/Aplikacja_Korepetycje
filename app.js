@@ -91,7 +91,7 @@ app.post('/login-form', async (req, res) =>{
       if(match){
       // Set up session
       req.session.user = email;
-      res.redirect('/main.html');
+      res.redirect('/glowna.html');
       }
     } else {
       res.status(401).send('Invalid credentials');
@@ -109,8 +109,12 @@ function isAuthenticated(req, res, next) {
   }
 }
 
-app.get('/main.html', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'main.html'));
+app.get('/add_korepetycje.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'add_korepetycje.html'));
+});
+
+app.get('/glowna.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'glowna.html'));
 });
 
 app.get('/profil.html', isAuthenticated, (req, res) => {
