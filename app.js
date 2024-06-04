@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const cnctionString = require('./cnctionString.js');
 
 const port = 3000;
-const routes = require('./routes/index') //!!naprawic
+const routes = require('./routes/index') 
 
 //session middleware
 // Use express-session middleware
@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes); //!!naprawic
+app.use('/', routes);
 
 
 //MongoDB section///
