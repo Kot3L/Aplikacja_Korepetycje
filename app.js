@@ -10,7 +10,8 @@ const cnctionString = require('./cnctionString.js');
 const port = 3000;
 const routes = require('./routes/index') 
 
-//session middleware
+// Session middleware //
+
 // Use express-session middleware
 app.use(session({
   secret: 'your-secret-key',
@@ -25,14 +26,12 @@ app.use(session({
 // Parse JSON and url-encoded query
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', routes);
 
 
-//MongoDB section///
+// MongoDB section //
+
 // Middleware to parse form data
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -47,30 +46,39 @@ mongoose.connect(cnctionString, {
 });
 
 // Define a schema and model
-const FormSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   email: String,
   password: String
 });
-const FormModel = mongoose.model('Form', FormSchema);
+const UserModel = mongoose.model('User', UserSchema);
 
-app.post('/submit-form', async (req, res) => {
+const TutoringSchema = new mongoose.Schema({
+  authorsEmail: String,
+  subject: String,
+  chapter: String,
+  thema: String,
+  description: String
+});
+const TutoringModel = mongoose.model('Tutoring', TutoringSchema);
+
+// Register section
+app.post('/register-form', async (req, res) => {
   console.log('Form data received:', req.body);
-  
   // Check for existing data with the same email
   try {
-    const existingData = await FormModel.findOne({ email: req.body.email });
+    const existingData = await UserModel.findOne({ email: req.body.email });
     if (existingData) {
       // If a match is found, send an appropriate response
       res.status(400).send('Data with this email already exists.');
     } else {
       // Hash the password before saving the new data
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      const formData = new FormModel({
+      const userData = new UserModel({
         email: req.body.email,
         password: hashedPassword
       });
-      await formData.save();
-      res.redirect('/login.html');  // Redirect with query parameter
+      await userData.save();
+      res.redirect('/login.html'); // Redirect with query parameter
     }
   } catch (err) {
     console.error('Failed to save form data:', err);
@@ -78,26 +86,42 @@ app.post('/submit-form', async (req, res) => {
   }
 });
 
-
-//Login section
-
+// Login section
 app.post('/login-form', async (req, res) =>{
-
   const { email, password } = req.body;
   try {
-    const user = await FormModel.findOne({ email });
+    const user = await UserModel.findOne({ email });
     if (user) {
       const match = await bcrypt.compare(req.body.password, user.password);
-      if(match){
-      // Set up session
-      req.session.user = email;
-      res.redirect('/glowna.html');
+      if (match) {
+        // Set up session
+        req.session.user = email;
+        res.redirect('/glowna.html');
       }
     } else {
       res.status(401).send('Invalid credentials');
     }
   } catch (err) {
     res.status(500).send('Server error');
+  }
+});
+
+// Add tutoring section
+app.post('/add-tutoring-form', async (req, res) => {
+  console.log('Form data received:', req.body);
+  try {
+    const tutoringData = new TutoringModel({
+      authorsEmail: req.session.user,
+      subject: req.body.subject,
+      chapter: req.body.chapter,
+      thema: req.body.thema,
+      description: req.body.description
+    });
+    await tutoringData.save();
+    res.redirect('/add_korepetycje.html'); // Redirect with query parameter
+  } catch (err) {
+    console.error('Failed to save form data:', err);
+    res.status(500).send('Failed to save form data');
   }
 });
 
@@ -121,10 +145,10 @@ app.get('/profil.html', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'profil.html'));
 });
 
-//Server responses section
+// Server responses section
 app.listen(port, () => {
-    console.log(`Serwer działa pod adresem http://localhost:${port}`);
-  });
+  console.log(`Serwer działa pod adresem http://localhost:${port}`);
+});
 
 // Handle server errors
 app.on('error', (error) => {
@@ -148,15 +172,15 @@ process.on('SIGTERM', () => {
   });
 });
 
-//Server section end
+// Server section end //
 
 // Obsługa błędu 404
 app.use((req, res, next) => {
-    res.status(404).send('Przepraszamy, taka trasa nie istnieje.');
-  });
+  res.status(404).send('Przepraszamy, taka trasa nie istnieje.');
+});
   
-  // Obsługa błędów
-  app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Coś poszło nie tak!');
-  });
+// Obsługa błędów
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Coś poszło nie tak!');
+});

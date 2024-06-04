@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,26 +12,24 @@
     <link rel="stylesheet" href="korepetytorzy.css">
     <link rel="stylesheet" href="add_korepetycje.css">
 </head>
-
 <body>
     <header>
         <h1 id="add_h1">Dodaj Korepetycje</h1>
         <img src="img/logo.png" class="logo" alt="logo zsti pomarańczowe">
     </header>
-
     <main>
-        <form action="">
-            <label for="nazwa">Dodaj</label>
-            <input type="text" placeholder="przedmiot">
-            <input type="text" name="dział" id="" placeholder="dział">
-            <input type="text" name="temat" id="" placeholder="temat">
-            <textarea name="opis" id="opis" placeholder="opis"></textarea>
+        <form action="/add-tutoring-form" method="POST">
+            <label for="subject">Dodaj</label>
+            <input type="text" name="subject" id="subject" placeholder="przedmiot">
+            <input type="text" name="chapter" id="chapter" placeholder="dział">
+            <input type="text" name="thema" id="thema" placeholder="temat">
+            <textarea name="description" id="description" placeholder="opis"></textarea>
             <input type="submit" id="submit" value="Dodaj">
         </form>
     </main>
     <footer>
         <div class="icon-container">
-            <a href="korepetytorzy.html"><i class="bi bi-people "></i></a>
+            <a href="korepetytorzy.html"><i class="bi bi-people"></i></a>
             <a href="add_korepetycje.html"><i class="bi bi-person-plus active"></i></a>
             <a href="glowna.html"><i class="bi bi-house"></i></a>
             <a href="kalendarz.html"><i class="bi bi-calendar4-event"></i></a>
@@ -40,5 +37,4 @@
         </div>
     </footer>
 </body>
-
 </html>
