@@ -43,29 +43,6 @@ main {
     grid-area: main;
 }
 
-/* Footer */
-
-footer {
-    grid-area: foot;
-    display: flex;
-    justify-content: center;
-    border-top: 1vw solid #E4E4E7;
-    padding-top: 1vw;
-    width: 93%;
-    justify-self: center;
-}
-
-nav {
-    display: flex;
-    flex-direction: row;
-    gap: 4vw;
-}
-
-img {
-    width: 4vw;
-    height: 4vw;
-}
-
 @media(max-width: 426px) {
 
 }

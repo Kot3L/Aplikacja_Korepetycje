@@ -6,6 +6,14 @@ body{
 
 }
 
+
+/* main */
+
+main{
+    display: flex;
+    flex-direction: row;
+    max-width: 100vw;
+}
 /* header */
 
 header{
@@ -86,67 +94,35 @@ aside > img{
 
 }
 
-.stars_container{
-
-    width: 18rem;
-
-}
-
-.stars_container > img{
-
-    width: 18rem;
-    height: 4rem;
-
-}
-
 .info_container{
-
+    
     width: 18rem;
     font-size: 0.8rem;
-
+    
 }
 
-/* footer */
-
-footer {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    height: 10vh;
-    bottom: 0;
-    position: fixed;
-    margin-bottom: 5vh;
-}
-
-.icon-container {
+.stars_container{
+    gap: 20px;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
-    align-items: flex-end;
-    border-top: 5px solid #E4E4E7;
-    width: 90%;
+    padding: 15px;
 }
 
-a {
-    scale: 2;
-    padding-top: 1em;
-    color: black;
-    transition: ease-in-out 0.3s;
+aside i {
+    font-size: 1.5rem;
+    justify-content: space-between;
+    color: rgb(186, 186, 1);
 }
 
-a:hover {
-    color: #F9B521;
-    cursor: pointer;
-    transition: ease-in-out 0.3s;
+aside i:hover{
+    color: yellow;
 }
 
-.active {
-    color: #F9B521;
-}
+
 
 
 /* responsywanosc */
-
+  
 @media (max-width: 680px) {
     .container {
         grid-template-columns: 1fr;
@@ -156,13 +132,19 @@ a:hover {
 }
 
 @media (max-width: 980px) {
-    aside{
-        display: none;
+    body{
+
+        flex-direction: column;
     }
 
     section{
 
         width: 60vw;
 
+    }
+
+    footer{
+
+        z-index: 1;
     }
 }
