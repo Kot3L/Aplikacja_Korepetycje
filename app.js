@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const bcrypt = require('bcrypt');
 const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
@@ -8,7 +9,6 @@ const cnctionString = require('./cnctionString.js');
 
 const port = 3000;
 const routes = require('./routes/index') //!!naprawic
-
 
 //session middleware
 // Use express-session middleware
@@ -63,8 +63,12 @@ app.post('/submit-form', async (req, res) => {
       // If a match is found, send an appropriate response
       res.status(400).send('Data with this email already exists.');
     } else {
-      // If no match is found, save the new data
-      const formData = new FormModel(req.body);
+      // Hash the password before saving the new data
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      const formData = new FormModel({
+        email: req.body.email,
+        password: hashedPassword
+      });
       await formData.save();
       res.redirect('/login.html');  // Redirect with query parameter
     }
@@ -81,11 +85,14 @@ app.post('/login-form', async (req, res) =>{
 
   const { email, password } = req.body;
   try {
-    const user = await FormModel.findOne({ email, password });
+    const user = await FormModel.findOne({ email });
     if (user) {
+      const match = await bcrypt.compare(req.body.password, user.password);
+      if(match){
       // Set up session
       req.session.user = email;
       res.redirect('/main.html');
+      }
     } else {
       res.status(401).send('Invalid credentials');
     }
