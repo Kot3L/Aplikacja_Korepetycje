@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
@@ -9,12 +10,26 @@ const port = 3000;
 const routes = require('./routes/index')
 
 
+//session middleware
+// Use express-session middleware
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    maxAge: null // Cookie expires when the browser is closed
+  }
+}));
 
+// Parse JSON and url-encoded query
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+// app.use('/', routes);
 
 
 //MongoDB section///
@@ -64,19 +79,47 @@ app.post('/submit-form', async (req, res) => {
 
 app.post('/login-form', async (req, res) =>{
 
-  try{
-    const existingDataBlock = await FormModel.findOne(
-      {email: req.body.email, 
-      password: req.body.password});
-    if(existingDataBlock){
+  const { email, password } = req.body;
+  try {
+    const user = await FormModel.findOne({ email, password });
+    if (user) {
+      // Set up session
+      req.session.user = email;
       res.redirect('/main.html');
-    }else{
-      res.status(404).send('There is no such data located in the database');
+    } else {
+      res.status(401).send('Invalid credentials');
     }
-  }catch(err){
-    console.error('Error retrieving the data:', err);
-    res.status(500).send('Internal server error ');
+  } catch (err) {
+    res.status(500).send('Server error');
   }
+});
+
+function isAuthenticated(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    res.redirect('/login.html');
+  }
+}
+
+app.get('/', (req, res)=>{
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+})
+
+app.get('/index.html', (req, res) =>{
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+})
+
+app.get('/login.html', (req, res) =>{
+  res.sendFile(path.join(__dirname, 'views', 'login.html'));
+})
+
+app.get('/main.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'main.html'));
+});
+
+app.get('/profil.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'profil.html'));
 });
 
 //Server responses section
