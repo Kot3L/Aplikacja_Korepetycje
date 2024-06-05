@@ -1,4 +1,5 @@
 const express = require('express');
+const Fuse = require('fuse.js');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const app = express();
@@ -53,7 +54,8 @@ const TutoringSchema = new mongoose.Schema({
   subject: String,
   chapter: String,
   thema: String,
-  description: String
+  description: String,
+  rating: Number
 });
 const TutoringModel = mongoose.model('Tutoring', TutoringSchema);
 
@@ -109,7 +111,8 @@ app.post('/add-tutoring-form', async (req, res) => {
       subject: req.body.subject,
       chapter: req.body.chapter,
       thema: req.body.thema,
-      description: req.body.description
+      description: req.body.description,
+      rating: 0
     });
     await tutoringData.save();
     res.redirect('/add_korepetycje.html');
@@ -122,14 +125,49 @@ app.post('/add-tutoring-form', async (req, res) => {
 // Search tutoring route
 app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
   const { user, subject, chapter, thema } = req.body;
-  try {
-    const query = {};
-    if (user) query.authorsEmail = new RegExp(user, 'i');
-    if (subject) query.subject = new RegExp(subject, 'i');
-    if (chapter) query.chapter = new RegExp(chapter, 'i');
-    if (thema) query.thema = new RegExp(thema, 'i');
 
-    const tutorings = await TutoringModel.find(query);
+  try {
+    // Fetch all tutorings from the database
+    let tutorings = await TutoringModel.find({});
+
+    // Combine search criteria into an array
+    const searchCriteria = [
+      { key: 'authorsEmail', value: user, priority: 4 },
+      { key: 'subject', value: subject, priority: 3 },
+      { key: 'chapter', value: chapter, priority: 2 },
+      { key: 'thema', value: thema, priority: 1 }
+    ];
+
+    // Filter out empty search criteria
+    const filteredCriteria = searchCriteria.filter(criteria => criteria.value);
+
+    if (filteredCriteria.length > 0) {
+      // Set up Fuse.js options
+      const options = {
+        keys: filteredCriteria.map(criteria => criteria.key),
+        threshold: 0.4, // Adjust the threshold to your needs
+        distance: 100, // Adjust the distance to your needs
+      };
+
+      // Initialize Fuse.js
+      const fuse = new Fuse(tutorings, options);
+
+      // Perform the search
+      let results = fuse.search(filteredCriteria.map(criteria => criteria.value).join(' '));
+
+      // Extract matched items
+      tutorings = results.map(result => result.item);
+
+      // Sort results based on priority
+      tutorings = tutorings.sort((a, b) => {
+        const aPriority = filteredCriteria.reduce((sum, criteria) => 
+          sum + (new RegExp(criteria.value, 'i').test(a[criteria.key]) ? criteria.priority : 0), 0);
+        const bPriority = filteredCriteria.reduce((sum, criteria) => 
+          sum + (new RegExp(criteria.value, 'i').test(b[criteria.key]) ? criteria.priority : 0), 0);
+        return bPriority - aPriority;
+      });
+    }
+
     res.render('wyniki', { items: tutorings });
   } catch (err) {
     console.error('Failed to retrieve tutorings:', err);
