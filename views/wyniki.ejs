@@ -9,23 +9,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="korepetytorzy.css">
+    <link rel="stylesheet" href="wyniki.css">
 </head>
 <body>
     <header>
-        <h1>Korepetytorzy</h1>
-        <img src="img/logo.png" class="logo" alt="logo zsti pomarańczowe">
+        <h1>Wyniki wyszukiwania</h1>
+        <img src="/img/logo.png" class="logo" alt="logo zsti pomarańczowe">
     </header>
     <main>
-        <form action="/search-tutoring-form" method="POST">
-            <label for="user">Szukaj po nazwie użytkownika</label>
-            <input type="text" name="user" id="user">
-            <label for="subject">Szukaj po preferencjach</label>
-            <input type="text" name="subject" id="subject" placeholder="przedmiot">
-            <input type="text" name="chapter" id="chapter" placeholder="dzial">
-            <input type="text" name="thema" id="thema" placeholder="temat">
-            <input type="submit" id="submit" value="Szukaj">
-        </form>
+        <div class="line"></div>
+        <% items.forEach(function(item) { %>
+        <section class="wynik">
+            <div class="user_info">
+                <p><%= item.authorsEmail %></p>
+                <div class="star_container">
+                    <% for (let i = 0; i < 5; i++) { %>
+                        <i class="bi bi-star-fill" <% if (i >= item.rating) { %> style="color: lightgray;" <% } %>></i>
+                    <% } %>
+                </div>
+            </div>
+            <div class="description">
+                <p><%= item.description %></p>
+            </div>
+        </section>
+        <div class="line"></div>
+        <% }); %>
     </main>
     <footer>
         <div class="icon-container">

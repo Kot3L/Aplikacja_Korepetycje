@@ -6,13 +6,14 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cnctionString = require('./cnctionString.js');
-
 const port = 3000;
-const routes = require('./routes/index') 
+const routes = require('./routes/index');
 
-// Session middleware //
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-// Use express-session middleware
+// Session middleware
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
@@ -29,13 +30,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 
-
-// MongoDB section //
-
-// Middleware to parse form data
+// MongoDB connection
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Connect to MongoDB
 mongoose.connect(cnctionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -61,24 +57,21 @@ const TutoringSchema = new mongoose.Schema({
 });
 const TutoringModel = mongoose.model('Tutoring', TutoringSchema);
 
-// Register section
+// Register route
 app.post('/register-form', async (req, res) => {
   console.log('Form data received:', req.body);
-  // Check for existing data with the same email
   try {
     const existingData = await UserModel.findOne({ email: req.body.email });
     if (existingData) {
-      // If a match is found, send an appropriate response
       res.status(400).send('Data with this email already exists.');
     } else {
-      // Hash the password before saving the new data
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const userData = new UserModel({
         email: req.body.email,
         password: hashedPassword
       });
       await userData.save();
-      res.redirect('/login.html'); // Redirect with query parameter
+      res.redirect('/login.html');
     }
   } catch (err) {
     console.error('Failed to save form data:', err);
@@ -86,17 +79,18 @@ app.post('/register-form', async (req, res) => {
   }
 });
 
-// Login section
-app.post('/login-form', async (req, res) =>{
+// Login route
+app.post('/login-form', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await UserModel.findOne({ email });
     if (user) {
       const match = await bcrypt.compare(req.body.password, user.password);
       if (match) {
-        // Set up session
         req.session.user = email;
         res.redirect('/glowna.html');
+      } else {
+        res.status(401).send('Invalid credentials');
       }
     } else {
       res.status(401).send('Invalid credentials');
@@ -106,7 +100,7 @@ app.post('/login-form', async (req, res) =>{
   }
 });
 
-// Add tutoring section
+// Add tutoring route
 app.post('/add-tutoring-form', async (req, res) => {
   console.log('Form data received:', req.body);
   try {
@@ -118,13 +112,32 @@ app.post('/add-tutoring-form', async (req, res) => {
       description: req.body.description
     });
     await tutoringData.save();
-    res.redirect('/add_korepetycje.html'); // Redirect with query parameter
+    res.redirect('/add_korepetycje.html');
   } catch (err) {
     console.error('Failed to save form data:', err);
     res.status(500).send('Failed to save form data');
   }
 });
 
+// Search tutoring route
+app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
+  const { user, subject, chapter, thema } = req.body;
+  try {
+    const query = {};
+    if (user) query.authorsEmail = new RegExp(user, 'i');
+    if (subject) query.subject = new RegExp(subject, 'i');
+    if (chapter) query.chapter = new RegExp(chapter, 'i');
+    if (thema) query.thema = new RegExp(thema, 'i');
+
+    const tutorings = await TutoringModel.find(query);
+    res.render('wyniki', { items: tutorings });
+  } catch (err) {
+    console.error('Failed to retrieve tutorings:', err);
+    res.status(500).send('Failed to retrieve tutorings');
+  }
+});
+
+// Authentication middleware
 function isAuthenticated(req, res, next) {
   if (req.session.user) {
     next();
@@ -133,6 +146,7 @@ function isAuthenticated(req, res, next) {
   }
 }
 
+// View routes
 app.get('/korepetytorzy.html', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'korepetytorzy.html'));
 });
@@ -155,7 +169,7 @@ app.get('/profil.html', isAuthenticated, (req, res) => {
 
 // Server responses section
 app.listen(port, () => {
-  console.log(`Serwer działa pod adresem http://localhost:${port}`);
+  console.log(`Server is running at http://localhost:${port}`);
 });
 
 // Handle server errors
@@ -180,15 +194,13 @@ process.on('SIGTERM', () => {
   });
 });
 
-// Server section end //
-
-// Obsługa błędu 404
+// Handle 404 errors
 app.use((req, res, next) => {
-  res.status(404).send('Przepraszamy, taka trasa nie istnieje.');
+  res.status(404).send('Sorry, that route does not exist.');
 });
-  
-// Obsługa błędów
+
+// Handle other errors
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Coś poszło nie tak!');
+  res.status(500).send('Something went wrong!');
 });

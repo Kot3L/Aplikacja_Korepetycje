@@ -1,0 +1,90 @@
+body {
+    margin: 0;
+    background-color: #fff;
+}
+
+/* Header */
+
+header {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 10vh;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    padding: .5em;
+    color: #012676;
+    font-size: 4rem;
+}
+
+.logo {
+    width: 8rem;
+    height: auto;
+    padding: 0;
+    margin-right: 2vw;
+}
+
+/* main */
+
+main{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+
+}
+
+.wynik{
+    width: 80%;
+    height: 20vh;
+}
+
+.wynik:last-child{
+    margin-bottom: 7rem;
+}
+
+.user_info{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    height: 7vh;
+    padding-left: 5rem;
+    padding-right: 5rem;
+}
+
+.description{
+    display: flex;
+    align-items: center;
+    width: 60%;
+    height: auto;
+    padding-top: 1rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
+}
+
+.star_container{
+    gap: 20px;
+    display: flex;
+    flex-direction: row;
+    padding: 15px;
+}
+
+.star_container i {
+    font-size: 1.5rem;
+    justify-content: space-between;
+    color: rgb(255, 166, 0);
+}
+
+.line{
+    width: 78%;
+    height: 0.4rem;
+    background-color: rgb(197, 196, 196);
+    border-radius: 3px;
+}
