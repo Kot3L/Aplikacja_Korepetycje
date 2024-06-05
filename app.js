@@ -1,4 +1,5 @@
 const express = require('express');
+const Fuse = require('fuse.js');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const app = express();
@@ -6,13 +7,14 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cnctionString = require('./cnctionString.js');
-
 const port = 3000;
-const routes = require('./routes/index') 
+const routes = require('./routes/index');
 
-// Session middleware //
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-// Use express-session middleware
+// Session middleware
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
@@ -29,13 +31,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 
-
-// MongoDB section //
-
-// Middleware to parse form data
+// MongoDB connection
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Connect to MongoDB
 mongoose.connect(cnctionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -57,28 +54,26 @@ const TutoringSchema = new mongoose.Schema({
   subject: String,
   chapter: String,
   thema: String,
-  description: String
+  description: String,
+  rating: Number
 });
 const TutoringModel = mongoose.model('Tutoring', TutoringSchema);
 
-// Register section
+// Register route
 app.post('/register-form', async (req, res) => {
   console.log('Form data received:', req.body);
-  // Check for existing data with the same email
   try {
     const existingData = await UserModel.findOne({ email: req.body.email });
     if (existingData) {
-      // If a match is found, send an appropriate response
       res.status(400).send('Data with this email already exists.');
     } else {
-      // Hash the password before saving the new data
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const userData = new UserModel({
         email: req.body.email,
         password: hashedPassword
       });
       await userData.save();
-      res.redirect('/login.html'); // Redirect with query parameter
+      res.redirect('/login.html');
     }
   } catch (err) {
     console.error('Failed to save form data:', err);
@@ -86,15 +81,14 @@ app.post('/register-form', async (req, res) => {
   }
 });
 
-// Login section
-app.post('/login-form', async (req, res) =>{
+// Login route
+app.post('/login-form', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await UserModel.findOne({ email });
     if (user) {
       const match = await bcrypt.compare(req.body.password, user.password);
       if (match) {
-        // Set up session
         req.session.user = email;
         res.redirect('/glowna.html');
       }else{
@@ -127,7 +121,7 @@ app.post('/login-form', async (req, res) =>{
   }
 });
 
-// Add tutoring section
+// Add tutoring route
 app.post('/add-tutoring-form', async (req, res) => {
   console.log('Form data received:', req.body);
   try {
@@ -136,16 +130,71 @@ app.post('/add-tutoring-form', async (req, res) => {
       subject: req.body.subject,
       chapter: req.body.chapter,
       thema: req.body.thema,
-      description: req.body.description
+      description: req.body.description,
+      rating: 0
     });
     await tutoringData.save();
-    res.redirect('/add_korepetycje.html'); // Redirect with query parameter
+    res.redirect('/add_korepetycje.html');
   } catch (err) {
     console.error('Failed to save form data:', err);
     res.status(500).send('Failed to save form data');
   }
 });
 
+// Search tutoring route
+app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
+  const { user, subject, chapter, thema } = req.body;
+
+  try {
+    // Fetch all tutorings from the database
+    let tutorings = await TutoringModel.find({});
+
+    // Combine search criteria into an array
+    const searchCriteria = [
+      { key: 'authorsEmail', value: user, priority: 4 },
+      { key: 'subject', value: subject, priority: 3 },
+      { key: 'chapter', value: chapter, priority: 2 },
+      { key: 'thema', value: thema, priority: 1 }
+    ];
+
+    // Filter out empty search criteria
+    const filteredCriteria = searchCriteria.filter(criteria => criteria.value);
+
+    if (filteredCriteria.length > 0) {
+      // Set up Fuse.js options
+      const options = {
+        keys: filteredCriteria.map(criteria => criteria.key),
+        threshold: 0.4, // Adjust the threshold to your needs
+        distance: 100, // Adjust the distance to your needs
+      };
+
+      // Initialize Fuse.js
+      const fuse = new Fuse(tutorings, options);
+
+      // Perform the search
+      let results = fuse.search(filteredCriteria.map(criteria => criteria.value).join(' '));
+
+      // Extract matched items
+      tutorings = results.map(result => result.item);
+
+      // Sort results based on priority
+      tutorings = tutorings.sort((a, b) => {
+        const aPriority = filteredCriteria.reduce((sum, criteria) => 
+          sum + (new RegExp(criteria.value, 'i').test(a[criteria.key]) ? criteria.priority : 0), 0);
+        const bPriority = filteredCriteria.reduce((sum, criteria) => 
+          sum + (new RegExp(criteria.value, 'i').test(b[criteria.key]) ? criteria.priority : 0), 0);
+        return bPriority - aPriority;
+      });
+    }
+
+    res.render('wyniki', { items: tutorings });
+  } catch (err) {
+    console.error('Failed to retrieve tutorings:', err);
+    res.status(500).send('Failed to retrieve tutorings');
+  }
+});
+
+// Authentication middleware
 function isAuthenticated(req, res, next) {
   if (req.session.user) {
     next();
@@ -153,6 +202,11 @@ function isAuthenticated(req, res, next) {
     res.redirect('/login.html');
   }
 }
+
+// View routes
+app.get('/korepetytorzy.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'korepetytorzy.html'));
+});
 
 app.get('/add_korepetycje.html', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'add_korepetycje.html'));
@@ -162,13 +216,17 @@ app.get('/glowna.html', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'glowna.html'));
 });
 
+app.get('/kalendarz.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'kalendarz.html'));
+});
+
 app.get('/profil.html', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'profil.html'));
 });
 
 // Server responses section
 app.listen(port, () => {
-  console.log(`Serwer działa pod adresem http://localhost:${port}`);
+  console.log(`Server is running at http://localhost:${port}`);
 });
 
 // Handle server errors
@@ -193,15 +251,13 @@ process.on('SIGTERM', () => {
   });
 });
 
-// Server section end //
-
-// Obsługa błędu 404
+// Handle 404 errors
 app.use((req, res, next) => {
-  res.status(404).send('Przepraszamy, taka trasa nie istnieje.');
+  res.status(404).send('Sorry, that route does not exist.');
 });
-  
-// Obsługa błędów
+
+// Handle other errors
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Coś poszło nie tak!');
+  res.status(500).send('Something went wrong!');
 });
