@@ -97,10 +97,31 @@ app.post('/login-form', async (req, res) =>{
         // Set up session
         req.session.user = email;
         res.redirect('/glowna.html');
+      }else{
+        res.send(`
+        <html>
+        <head>
+          <script>
+            alert("Podano zle haslo");
+            window.location.href = '/login.html';
+          </script>
+        </head>
+        <body></body>
+      </html>
+        `)
       }
     } else {
-      res.status(401).send('Invalid credentials');
-    }
+      res.send(`        
+      <html>
+      <head>
+        <script>
+          alert("Podano zlego emaila");
+          window.location.href = '/login.html';
+        </script>
+      </head>
+      <body></body>
+    </html>`);
+      }
   } catch (err) {
     res.status(500).send('Server error');
   }
