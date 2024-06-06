@@ -25,6 +25,15 @@ app.use(session({
   }
 }));
 
+// Middleware to initialize nrOfTries if not present
+app.use((req, res, next) => {
+  if (!req.session.nrOfTries) {
+    req.session.nrOfTries = 0;
+  }
+  next();
+});
+
+
 // Parse JSON and url-encoded query
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -92,6 +101,23 @@ app.post('/login-form', async (req, res) => {
         req.session.user = email;
         res.redirect('/glowna.html');
       }else{
+        req.session.nrOfTries = (req.session.nrOfTries || 0) + 1; // Initialize and increment nrOfTries
+        console.log(req.session.nrOfTries);
+        if(req.session.nrOfTries == 4){
+          req.session.isAuthenticated = true;
+          res.send(`
+            <html>
+            <head>
+              <script>
+                alert("To na pewno ty?");
+                window.location.href = '/index.html';
+              </script>
+            </head>
+            <body></body>
+            </html>
+          `);
+          return; // Stop further execution
+        }
         res.send(`
         <html>
         <head>
@@ -201,9 +227,31 @@ function isAuthenticated(req, res, next) {
   } else {
     res.redirect('/login.html');
   }
+  if (req.session.isAuthenticated) {
+    return next();
+  } else {
+    res.redirect('/login.html');
+  }
 }
 
+// Middleware to check if authentication is required
+const checkAuthRequired = (req, res, next) => {
+  if (req.session.nrOfTries >= 4) {
+    return isAuthenticated(req, res, next);
+  }
+  next();
+};
+
+// Route to get the session variables
+app.get('/get-session', (req, res) => {
+  const nrOfTries = req.session.nrOfTries;
+});
+
 // View routes
+app.get('/login.html', checkAuthRequired, (req, res)=>{
+  res.sendFile(path.join(__dirname, 'views', 'login.html'))
+});
+
 app.get('/korepetytorzy.html', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'korepetytorzy.html'));
 });
