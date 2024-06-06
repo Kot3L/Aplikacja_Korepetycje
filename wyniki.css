@@ -1,7 +1,3 @@
-html {
-
-}
-
 body {
     margin: 0;
     background-color: #fff;
@@ -31,9 +27,9 @@ h1 {
     margin-right: 2vw;
 }
 
-/* main */
+/* Main */
 
-.result_posts{
+.result_posts {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -42,10 +38,9 @@ h1 {
     gap: 2.5rem;
     margin: 4rem 0;
     font-size: 1rem;
-    
 }
 
-.result{
+.result {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -55,44 +50,47 @@ h1 {
     box-shadow: 15px 15px 20px -10px rgba(66, 68, 90, 1);
 }
 
-.result:last-child{
+.result:last-child {
     margin-bottom: 7rem;
 }
 
-.user_info{
+.user_info {
     display: flex;
     gap: 1.6rem;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     height: 7vh;
-
 }
-.user_info img{
+
+.user_info img {
     width: 4.5rem;
     height: 4.5rem;
     border-radius: 100%;
 }
-.description{
+
+.description {
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
     width: 55%;
     height: auto;
 }
-h5{
+
+h5 {
     letter-spacing: 0.06rem;
     font-weight: bold;
     color:#afafaf;
 }
-.star_container{
+
+.star_container {
     gap: 20px;
     display: flex;
     flex-direction: row;
     padding: 15px;
-    
 }
-.username{
+
+.username {
     margin-right: auto;
 }
 
@@ -102,7 +100,7 @@ h5{
     color: rgb(255, 166, 0);
 }
 
-.result_link{
+.result_link {
     width: 17%;
     height: 40px;
     background-color: #f8b420;
@@ -111,29 +109,33 @@ h5{
     border-bottom-right-radius: 3px;
     border-bottom: 6px rgb(216, 149, 26) solid;
 }
-.result_link:hover{
+
+.result_link:hover {
     border-bottom: 4px rgb(216, 149, 26) solid;
     transition: all 0.1s ease;
 }
-.result_link:active{
+
+.result_link:active {
     border-bottom: none;
     background-color: #f8b420be;
 }
-.subject_info{
+
+.subject_info {
     background-color: #526387;
     display: flex;
     gap: 1rem;
     width: fit-content;
     padding: 0.7rem 1rem;
     border-radius: 30px;
-    
 }
-.sbj_info{
+
+.sbj_info {
     display: flex;
     flex-direction: column;
     gap: 0.7rem;
 }
-.subject_info>*{
+
+.subject_info > * {
     padding: 0.5rem;
     border-radius: 30px;
     background-color: #a2a5f8;

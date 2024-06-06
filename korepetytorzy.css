@@ -31,8 +31,6 @@ h1 {
     margin-right: 2vw;
 }
 
-/* Main */
-
 main {
     display: flex;
     flex-wrap: wrap;
@@ -94,7 +92,6 @@ input {
         display: none;
     }
 }
-
 
 @media(max-width: 769px) {
     :root {

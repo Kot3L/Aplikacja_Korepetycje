@@ -164,7 +164,7 @@ td:nth-child(2) {
 }
 
 @media (max-width: 980px) {
-    main{
+    main {
         padding-bottom: 10rem;
         gap: 2rem;
         flex-direction: column-reverse;
