@@ -22,18 +22,11 @@ h1 {
     margin-right: 2vw;
 }
 
-/* main */
-
-main{
-
+main {
     display: flex;
-
 }
 
-/* aside */
-
-aside{
-
+aside {
     margin-top: 2rem;
     width: 25%;
     height: 75vh;
@@ -41,11 +34,9 @@ aside{
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-
 }
 
-.event_box{
-
+.event_box {
     width: 75%;
     height: 46%;
     background-color: #f3f3f3;
@@ -53,23 +44,17 @@ aside{
     -webkit-box-shadow: 6px 15px 14px -13px rgba(117, 117, 117, 1);
     -moz-box-shadow: 6px 15px 14px -13px rgba(117, 117, 117, 1);
     box-shadow: 6px 15px 14px -13px rgba(117, 117, 117, 1);
-
 }
 
-.neme{
-
+.neme {
     padding-left: 1rem;
     font-size: 1.3rem;
     height: 15%;
     display: flex;
     align-items: center;
-
 }
 
-/* section */
-
-section{
-
+section {
     margin-top: 2rem;
     width: 70%;
     height: 75vh;
@@ -79,42 +64,34 @@ section{
     -webkit-box-shadow: 6px 15px 14px -13px rgba(117, 117, 117, 1);
     -moz-box-shadow: 6px 15px 14px -13px rgba(117, 117, 117, 1);
     box-shadow: 6px 15px 14px -13px rgba(117, 117, 117, 1);
-
 }
 
-.month{
-
+.month {
     background-color: black;
     color: white;
     text-align: center;
     width: 5%;
     min-width: 88px;
     border-radius: 3px;
-
 }
 
-.calender{
-
+.calender {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: end;
-
 }
 
-.weeks{
-
+.weeks {
     width: 2%;
     height: 95%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-
 }
 
-.week_nr{
-
+.week_nr {
     background-color: #333333;
     display: flex;
     justify-content: center;
@@ -123,61 +100,49 @@ section{
     height: 4%;
     border-radius: 6px;
     color: white;
-
 }
 
-.week_day{
-
+.week_day {
     width: 98%;
     height: 100%;
     display: flex;
     flex-direction: column;
-
 }
 
-.DayOfWeek{
-
+.day_of_week {
     width: 100%;
     height: 5%;
     display: flex;
     justify-content: space-around;
     align-items: center;
-
 }
 
-.days_box{
-
+.days_box {
     display: flex;
     width: 100%;
     height: 100%;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-
 }
 
-.day{
-
+.day {
     height: 15%;
     width: 14%;
     display: flex;
     align-items: end;
     justify-content: end;
     border: solid 1px black;
-    
 }
 
-.next_month{
-
+.next_month {
     color: rgb(154, 154, 154);
-
 }
 
-.weekend{
-
+.weekend {
     color:#012676;
 }
 
-/* rezponsywnosc */
+/* Responsywnosc */
 
 /* sadwik dostajesz lote jak tego nie zrobisz */
