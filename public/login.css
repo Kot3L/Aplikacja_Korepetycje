@@ -4,11 +4,10 @@
     font-optical-sizing: auto;
     font-weight: 700;
     font-style: normal;
-    font-variation-settings:
-        "slnt" 0;
+    font-variation-settings: "slnt" 0;
 }
 
-/*Header*/
+/* Header */
 
 header {
     display: flex;
@@ -19,8 +18,7 @@ header {
     color: white;
 }
 
-/*Main*/
-
+/* Main */
 
 main {
     display: flex;
@@ -31,10 +29,9 @@ main {
     width: 100%;
     flex-direction: column;
     color: white;
-
 }
 
-/*Form*/
+/* Form */
 
 form {
     display: flex;
@@ -44,12 +41,11 @@ form {
     justify-content: space-around;
 }
 
-form>label {
+form > label {
     align-self: flex-start;
 }
 
-
-.Welcome_text {
+.welcome_text {
     text-align: left;
     padding-bottom: 3rem;
 }
@@ -61,8 +57,7 @@ input {
     border: none;
 }
 
-.password,
-.repassword {
+.password, .repassword {
     margin-top: 2rem;
 }
 
@@ -82,7 +77,7 @@ a {
 /*Responsywnosc*/
 
 @media(max-width: 426px) {
-    .Welcome_text {
+    .welcome_text {
         width: 70%;
     }
 
@@ -104,7 +99,7 @@ a {
         width: 75%;
     }
 
-    .Welcome_text {
+    .welcome_text {
         width: 40%;
     }
 }
