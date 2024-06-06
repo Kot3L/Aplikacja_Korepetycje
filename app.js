@@ -61,8 +61,8 @@ const UserModel = mongoose.model('User', UserSchema);
 const TutoringSchema = new mongoose.Schema({
   authorsEmail: String,
   subject: String,
-  chapter: String,
-  thema: String,
+  unit: String,
+  topic: String,
   description: String,
   rating: Number
 });
@@ -154,8 +154,8 @@ app.post('/add-tutoring-form', async (req, res) => {
     const tutoringData = new TutoringModel({
       authorsEmail: req.session.user,
       subject: req.body.subject,
-      chapter: req.body.chapter,
-      thema: req.body.thema,
+      unit: req.body.unit,
+      topic: req.body.topic,
       description: req.body.description,
       rating: 0
     });
@@ -169,7 +169,7 @@ app.post('/add-tutoring-form', async (req, res) => {
 
 // Search tutoring route
 app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
-  const { user, subject, chapter, thema } = req.body;
+  const { user, subject, unit, topic } = req.body;
 
   try {
     // Fetch all tutorings from the database
@@ -177,10 +177,10 @@ app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
 
     // Combine search criteria into an array
     const searchCriteria = [
-      { key: 'authorsEmail', value: user, priority: 4 },
-      { key: 'subject', value: subject, priority: 3 },
-      { key: 'chapter', value: chapter, priority: 2 },
-      { key: 'thema', value: thema, priority: 1 }
+      { key: 'authorsEmail', value: user },
+      { key: 'subject', value: subject },
+      { key: 'unit', value: unit },
+      { key: 'topic', value: topic }
     ];
 
     // Filter out empty search criteria
@@ -197,20 +197,15 @@ app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
       // Initialize Fuse.js
       const fuse = new Fuse(tutorings, options);
 
-      // Perform the search
-      let results = fuse.search(filteredCriteria.map(criteria => criteria.value).join(' '));
-
-      // Extract matched items
-      tutorings = results.map(result => result.item);
-
-      // Sort results based on priority
-      tutorings = tutorings.sort((a, b) => {
-        const aPriority = filteredCriteria.reduce((sum, criteria) => 
-          sum + (new RegExp(criteria.value, 'i').test(a[criteria.key]) ? criteria.priority : 0), 0);
-        const bPriority = filteredCriteria.reduce((sum, criteria) => 
-          sum + (new RegExp(criteria.value, 'i').test(b[criteria.key]) ? criteria.priority : 0), 0);
-        return bPriority - aPriority;
+      // Perform the search iteratively using each criterion
+      let results = tutorings;
+      filteredCriteria.forEach(criteria => {
+        const fuse = new Fuse(results, { keys: [criteria.key], threshold: 0.4, distance: 100 });
+        results = fuse.search(criteria.value).map(result => result.item);
       });
+
+      // Update tutorings with the final results
+      tutorings = results;
     }
 
     res.render('wyniki', { items: tutorings });

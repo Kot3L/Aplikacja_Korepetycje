@@ -14,26 +14,37 @@
 <body>
     <header>
         <h1>Wyniki wyszukiwania</h1>
-        <img src="/img/logo.png" class="logo" alt="logo zsti pomarańczowe">
+        <img src="img/logo.png" class="logo" alt="logo zsti pomarańczowe">
     </header>
     <main>
-        <div class="line"></div>
-        <% items.forEach(function(item) { %>
-        <section class="wynik">
-            <div class="user_info">
-                <p><%= item.authorsEmail %></p>
-                <div class="star_container">
-                    <% for (let i = 0; i < 5; i++) { %>
-                        <i class="bi bi-star-fill" <% if (i >= item.rating) { %> style="color: lightgray;" <% } %>></i>
-                    <% } %>
-                </div>
-            </div>
-            <div class="description">
-                <p><%= item.description %></p>
-            </div>
+        <section class="result_posts">
+            <% items.forEach(function(item) { %>
+                <article class="result">
+                    <div class="user_info">
+                        <img src="img/conor.png" alt="">
+                        <p class="username"><%= item.authorsEmail %></p>
+                        <div class="star_container">
+                            <% for (let i = 0; i < 5; i++) { %>
+                                <i class="bi bi-star-fill" <% if (i >= item.rating) { %> style="color: lightgray;" <% } %>></i>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="sbj_info">
+                        <h5>Informacje</h5>
+                        <div class="subject_info">
+                            <div class="subject"><%= item.subject %></div>
+                            <div class="unit"><%= item.unit %></div>
+                            <div class="topic"><%= item.topic %></div>
+                        </div>
+                    </div>
+                    <div class="description">
+                        <h5>Opis</h5>
+                        <p><%= item.description %></p>
+                    </div>
+                    <button class="result_link">Wybierz <i class="bi bi-arrow-right"></i></button>
+                </article>
+            <% }); %>
         </section>
-        <div class="line"></div>
-        <% }); %>
     </main>
     <footer>
         <div class="icon-container">
