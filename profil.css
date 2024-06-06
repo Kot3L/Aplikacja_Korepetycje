@@ -102,10 +102,6 @@ aside > img {
     font-size: 1.5rem;
 }
 
-aside i:hover {
-    color: yellow;
-}
-
 table {
     width: 100%;
     background-color: rgb(198, 198, 198);
