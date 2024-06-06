@@ -44,7 +44,6 @@ section {
 
 .block {
     background-color: #012676;
-    padding: 20px;
     border-radius: 3px;
     display: flex;
     justify-content: space-between;
@@ -62,6 +61,13 @@ section {
 
 .block:last-child {
     background-color: #df0000;
+}
+
+.block a, .block a:hover {
+    all: unset;
+    width: 100%;
+    padding: 20px;
+    cursor: pointer;
 }
 
 aside {
@@ -136,6 +142,7 @@ td:nth-child(2) {
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
     border-bottom: 6px rgb(157, 157, 157) solid;
+    cursor: pointer;
 }
 
 .edit_profile:hover {
