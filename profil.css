@@ -4,6 +4,7 @@
 
 main{
     display: flex;
+    height: auto;
     flex-direction: row;
     align-items: center;
     padding: 0 4rem 15rem 4rem;
@@ -32,7 +33,7 @@ section{
     display: flex;
     flex-direction: column;
     width: 70vw;
-    height: 40vh;
+    height: auto;
     gap: 5rem;
 }
 
@@ -169,9 +170,13 @@ td:nth-child(2){
         align-items: center;
         padding: 0 1rem 10rem 1rem;
     }
+    table{
+        font-size: 12px;
 
+    }
     section{
-
+        justify-content: center;
+        align-items: center;
         width: 89vw;
 
     }
