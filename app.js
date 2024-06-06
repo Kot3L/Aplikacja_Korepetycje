@@ -33,7 +33,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // Parse JSON and url-encoded query
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -45,8 +44,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect(cnctionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-}).then(() => {
-  console.log('Connected to MongoDB');
 }).catch((err) => {
   console.error('Failed to connect to MongoDB', err);
 });
@@ -70,11 +67,10 @@ const TutoringModel = mongoose.model('Tutoring', TutoringSchema);
 
 // Register route
 app.post('/register-form', async (req, res) => {
-  console.log('Form data received:', req.body);
   try {
     const existingData = await UserModel.findOne({ email: req.body.email });
     if (existingData) {
-      res.status(400).send('Data with this email already exists.');
+      return res.status(400).send('Data with this email already exists.');
     } else {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const userData = new UserModel({
@@ -82,11 +78,11 @@ app.post('/register-form', async (req, res) => {
         password: hashedPassword
       });
       await userData.save();
-      res.redirect('/login.html');
+      return res.redirect('/login.html');
     }
   } catch (err) {
     console.error('Failed to save form data:', err);
-    res.status(500).send('Failed to save form data');
+    return res.status(500).send('Failed to save form data');
   }
 });
 
@@ -99,13 +95,12 @@ app.post('/login-form', async (req, res) => {
       const match = await bcrypt.compare(req.body.password, user.password);
       if (match) {
         req.session.user = email;
-        res.redirect('/glowna.html');
-      }else{
-        req.session.nrOfTries = (req.session.nrOfTries || 0) + 1; // Initialize and increment nrOfTries
-        console.log(req.session.nrOfTries);
-        if(req.session.nrOfTries == 4){
+        return res.redirect('/glowna.html');
+      } else {
+        req.session.nrOfTries = (req.session.nrOfTries || 0) + 1;
+        if (req.session.nrOfTries == 4) {
           req.session.isAuthenticated = true;
-          res.send(`
+          return res.send(`
             <html>
             <head>
               <script>
@@ -116,40 +111,49 @@ app.post('/login-form', async (req, res) => {
             <body></body>
             </html>
           `);
-          return; // Stop further execution
         }
-        res.send(`
+        return res.send(`
+          <html>
+          <head>
+            <script>
+              alert("Podano zle haslo");
+              window.location.href = '/login.html';
+            </script>
+          </head>
+          <body></body>
+        </html>
+        `);
+      }
+    } else {
+      return res.send(`
         <html>
         <head>
           <script>
-            alert("Podano zle haslo");
+            alert("Podano zlego emaila");
             window.location.href = '/login.html';
           </script>
         </head>
         <body></body>
-      </html>
-        `)
-      }
-    } else {
-      res.send(`        
-      <html>
-      <head>
-        <script>
-          alert("Podano zlego emaila");
-          window.location.href = '/login.html';
-        </script>
-      </head>
-      <body></body>
-    </html>`);
-      }
+      </html>`);
+    }
   } catch (err) {
-    res.status(500).send('Server error');
+    return res.status(500).send('Server error');
   }
+});
+
+// Logout route
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.redirect('/profil.html');
+    }
+    res.clearCookie('connect.sid');
+    return res.redirect('/login.html');
+  });
 });
 
 // Add tutoring route
 app.post('/add-tutoring-form', async (req, res) => {
-  console.log('Form data received:', req.body);
   try {
     const tutoringData = new TutoringModel({
       authorsEmail: req.session.user,
@@ -160,10 +164,10 @@ app.post('/add-tutoring-form', async (req, res) => {
       rating: 0
     });
     await tutoringData.save();
-    res.redirect('/add_korepetycje.html');
+    return res.redirect('/add_korepetycje.html');
   } catch (err) {
     console.error('Failed to save form data:', err);
-    res.status(500).send('Failed to save form data');
+    return res.status(500).send('Failed to save form data');
   }
 });
 
@@ -172,60 +176,41 @@ app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
   const { user, subject, unit, topic } = req.body;
 
   try {
-    // Fetch all tutorings from the database
     let tutorings = await TutoringModel.find({});
-
-    // Combine search criteria into an array
     const searchCriteria = [
       { key: 'authorsEmail', value: user },
       { key: 'subject', value: subject },
       { key: 'unit', value: unit },
       { key: 'topic', value: topic }
     ];
-
-    // Filter out empty search criteria
     const filteredCriteria = searchCriteria.filter(criteria => criteria.value);
-
     if (filteredCriteria.length > 0) {
-      // Set up Fuse.js options
       const options = {
         keys: filteredCriteria.map(criteria => criteria.key),
-        threshold: 0.4, // Adjust the threshold to your needs
-        distance: 100, // Adjust the distance to your needs
+        threshold: 0.4,
+        distance: 100,
       };
-
-      // Initialize Fuse.js
       const fuse = new Fuse(tutorings, options);
-
-      // Perform the search iteratively using each criterion
       let results = tutorings;
       filteredCriteria.forEach(criteria => {
         const fuse = new Fuse(results, { keys: [criteria.key], threshold: 0.4, distance: 100 });
         results = fuse.search(criteria.value).map(result => result.item);
       });
-
-      // Update tutorings with the final results
       tutorings = results;
     }
-
-    res.render('wyniki', { items: tutorings });
+    return res.render('wyniki', { items: tutorings });
   } catch (err) {
     console.error('Failed to retrieve tutorings:', err);
-    res.status(500).send('Failed to retrieve tutorings');
+    return res.status(500).send('Failed to retrieve tutorings');
   }
 });
 
 // Authentication middleware
 function isAuthenticated(req, res, next) {
   if (req.session.user) {
-    next();
-  } else {
-    res.redirect('/login.html');
-  }
-  if (req.session.isAuthenticated) {
     return next();
   } else {
-    res.redirect('/login.html');
+    return res.redirect('/login.html');
   }
 }
 
@@ -243,8 +228,8 @@ app.get('/get-session', (req, res) => {
 });
 
 // View routes
-app.get('/login.html', checkAuthRequired, (req, res)=>{
-  res.sendFile(path.join(__dirname, 'views', 'login.html'))
+app.get('/login.html', checkAuthRequired, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
 app.get('/korepetytorzy.html', isAuthenticated, (req, res) => {
@@ -279,17 +264,13 @@ app.on('error', (error) => {
 
 // Gracefully shut down the server on SIGINT (Ctrl+C) or SIGTERM (termination signal)
 process.on('SIGINT', () => {
-  console.log('Received SIGINT. Shutting down gracefully...');
   app.close(() => {
-    console.log('Server has stopped');
     process.exit(0);
   });
 });
 
 process.on('SIGTERM', () => {
-  console.log('Received SIGTERM. Shutting down gracefully...');
   app.close(() => {
-    console.log('Server has stopped');
     process.exit(0);
   });
 });
@@ -302,5 +283,7 @@ app.use((req, res, next) => {
 // Handle other errors
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something went wrong!');
+  if (!res.headersSent) {
+    res.status(500).send('Something went wrong!');
+  }
 });
