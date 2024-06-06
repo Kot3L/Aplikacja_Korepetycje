@@ -27,53 +27,72 @@ h1 {
     margin-right: 2vw;
 }
 
-/* main */
+/* Main */
 
-main{
-
+.result_posts {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    margin-top: 5rem;
-    margin-bottom: 5rem;
-
+    justify-content: center;
+    gap: 2.5rem;
+    margin: 4rem 0;
+    font-size: 1rem;
+    
 }
 
-.wynik{
-    width: 80%;
-    height: 20vh;
+.result {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 70vw;
+    height: auto;
+    padding: 2rem 6rem 2rem 6rem;
+    box-shadow: 15px 15px 20px -10px rgba(66, 68, 90, 1);
 }
 
-.wynik:last-child{
+.result:last-child {
     margin-bottom: 7rem;
 }
 
-.user_info{
+.user_info {
     display: flex;
+    gap: 1.6rem;
     justify-content: space-between;
     align-items: center;
-    width: 80%;
+    width: 100%;
     height: 7vh;
-    padding-left: 5rem;
-    padding-right: 5rem;
 }
 
-.description{
+.user_info img {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 100%;
+}
+
+.description {
     display: flex;
-    align-items: center;
-    width: 60%;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 55%;
     height: auto;
-    padding-top: 1rem;
-    padding-left: 5rem;
-    padding-right: 5rem;
 }
 
-.star_container{
+h5 {
+    letter-spacing: 0.06rem;
+    font-weight: bold;
+    color:#afafaf;
+}
+
+.star_container {
     gap: 20px;
     display: flex;
     flex-direction: row;
     padding: 15px;
+}
+
+.username {
+    margin-right: auto;
 }
 
 .star_container i {
@@ -82,9 +101,43 @@ main{
     color: rgb(255, 166, 0);
 }
 
-.line{
-    width: 78%;
-    height: 0.4rem;
-    background-color: rgb(197, 196, 196);
-    border-radius: 3px;
+.result_link {
+    width: 17%;
+    height: 40px;
+    background-color: #f8b420;
+    border: none;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom: 6px rgb(216, 149, 26) solid;
+}
+
+.result_link:hover {
+    border-bottom: 4px rgb(216, 149, 26) solid;
+    transition: all 0.1s ease;
+}
+
+.result_link:active {
+    border-bottom: none;
+    background-color: #f8b420be;
+}
+
+.subject_info {
+    background-color: #526387;
+    display: flex;
+    gap: 1rem;
+    width: fit-content;
+    padding: 0.7rem 1rem;
+    border-radius: 30px;
+}
+
+.sbj_info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.subject_info > * {
+    padding: 0.5rem;
+    border-radius: 30px;
+    background-color: #a2a5f8;
 }
