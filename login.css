@@ -7,6 +7,10 @@
     font-variation-settings: "slnt" 0;
 }
 
+body{
+    background-color: #012676;
+}
+
 /* Header */
 
 header {
@@ -43,6 +47,7 @@ form {
 
 form > label {
     align-self: flex-start;
+    margin-top: 2rem;
 }
 
 .welcome_text {
@@ -55,10 +60,6 @@ input {
     height: 5vh;
     border-radius: 2px;
     border: none;
-}
-
-.password, .repassword {
-    margin-top: 2rem;
 }
 
 .submit {

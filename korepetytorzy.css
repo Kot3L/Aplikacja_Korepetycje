@@ -49,12 +49,22 @@ form * {
     margin: .5rem;
 }
 
-input {
+input{
     background-color: #D4D4D8;
     color: white;
     border: none;
     height: 7vh;
     width: 20rem;
+    padding-left: .5rem;
+    border-radius: 2px;
+}
+
+select {
+    background-color: #D4D4D8;
+    color: white;
+    border: none;
+    height: 7vh;
+    width: 20.6rem;
     padding-left: .5rem;
     border-radius: 2px;
 }
@@ -69,16 +79,6 @@ input {
     align-self: center;
     width: 70%;
     border-radius: 5px;
-}
-
-#opis{
-    padding: .5rem;
-    resize: none;
-    background-color: #D4D4D8;
-    color: white;
-    height: 6rem;
-    border: none;
-    border-radius: 2px;
 }
 
 /* Responsywnosc */

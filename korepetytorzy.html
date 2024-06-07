@@ -18,10 +18,47 @@
     </header>
     <main>
         <form action="korepetytorzy.html">
-            <label for="user">Szukaj po nazwie użytkownika</label>
+            <label for="user">Szukaj po imieniu i nazwisku</label>
             <input type="text" name="user" id="user">
             <label for="subject">Szukaj po preferencjach</label>
-            <input type="text" name="subject" id="subject" placeholder="przedmiot">
+            <select name="subject" id="subject">
+                <optgroup label="Przedmioty zawodowe">
+                    <option>Projektowanie i administrowanie bazami danych</option>
+                    <option>Projektowanie oprogramowania</option>
+                    <option>Projektowanie stron internetowych</option>
+                    <option>Programowanie aplikacji internetowych</option>
+                    <option>Projektowanie obiektowe</option>
+                    <option>Bezpieczeństwo i higiena pracy</option>
+                    <option>Podstawy elektrotechniki i elektroniki</option>
+                    <option>Maszyny i urządzenia elektryczne</option>
+                    <option>Instalacje elektryczne</option>
+                    <option>Montaż i konserwacja instalacji elektrycznych</option>
+                    <option>Montaż i konserwacja maszyn i urządzeń elektrycznych</option>
+                    <option>Podstawy informatyki</option>
+                    <option>Język obcy zawodowy</option>
+                    <option>Przygotowanie stanowiska komputerowego do pracy</option>
+                    <option>Eksploatacja urządzeń peryferyjnych</option>
+                    <option>Naprawa urządzeń techniki komputerowej</option>
+                    <option>Montaż i eksplantacja lokalnej sieci komputerowej</option>
+                </optgroup>
+                <optgroup label="Przedmioty ogólnokształcące">
+                    <option>Język polski</option>
+                    <option>Język angielski</option>
+                    <option>Język niemiecki</option>
+                    <option>Historia</option>
+                    <option>Wiedza o społeczeństwie</option>
+                    <option>Matematyka</option>
+                    <option>Fizyka</option>
+                    <option>Chemia</option>
+                    <option>Biologia</option>
+                    <option>Geografia</option>
+                    <option>Informatyka</option>
+                    <option>Edukacja dla bezpieczeństwa</option>
+                    <option>Podstawy przedsiębiorczości</option>
+                    <option>Historia i teraźniejszość</option>
+                    <option>Biznes i zarządzanie</option>
+                </optgroup>
+            </select>
             <input type="text" name="unit" id="unit" placeholder="dzial">
             <input type="text" name="topic" id="topic" placeholder="temat">
             <input type="submit" id="submit" value="Szukaj">
