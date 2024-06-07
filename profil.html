@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="profil.css">
+    <script src="profil.js" defer></script>
 </head>
 <body>
     <header>
@@ -25,34 +26,25 @@
                     <a href="profil.html"><p>Wyloguj <i class="bi bi-box-arrow-in-right"></i></p></a>
                 </div>
             </div>
-            <div class="personal_info">
+            <div class="personal_info_area">
                 <button class="edit_profile">Edytuj profil <i class="bi bi-pen"></i></button>
-                <table>
-                    <tr>
-                        <td>Imię:</td>
-                        <td>Connor</td>
-                    </tr>
-                    <tr>
-                        <td>Nazwisko:</td>
-                        <td>Mcgregor</td>
-                    </tr>
-                    <tr>
-                        <td>Email:</td>
-                        <td>connor.mcgregor@gmail.com</td>
-                    </tr>
-                    <tr>
-                        <td>Hasło:</td>
-                        <td>*************</td>
-                    </tr>
-                    <tr>
-                        <td>Github:</td>
-                        <td>TheNotoriousMMA</td>
-                    </tr>
-                    <tr>
-                        <td>Zdjęcie profilowe</td>
-                        <td>conor.png</td>
-                    </tr>
-                </table>
+                <div class="personal_info">
+                    <div class="info_col1">
+                        <label for="nazwa">Nazwa użytkownika:</label>
+                        <label for="haslo">Email:</label>
+                        <label for="haslo">Hasło:</label>
+                        <label for="Github">Github:</label>
+                        <label for="profilowe">Zdjęcie profilowe:</label>
+                    </div>
+                    <form class="info_col2" action="" name="personal_info">
+                        <input type="text" name="nazwa" value="Connor Mcgregor" disabled>
+                        <input type="email" name="email" value="connor.mcgregor@gmail.com" disabled>
+                        <input type="password" name="haslo" value="skibidiToilet" disabled>
+                        <input type="text" name="github-nazwa" value="TheNotoriousMMA" disabled>
+                        <input type="file" name="profilowe" disabled>
+                        <input type="submit" value="Zapisz" id="submit">
+                    </form>
+                </div>
             </div>
         </section>
         <aside>
