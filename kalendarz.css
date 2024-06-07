@@ -38,7 +38,8 @@ aside {
 
 .event_box {
     width: 75%;
-    height: 46%;
+    margin-top: 5vh;
+    height: 92%;
     background-color: #f3f3f3;
     border-radius: 5px;
     -webkit-box-shadow: 6px 15px 14px -13px rgba(117, 117, 117, 1);
