@@ -50,18 +50,23 @@ mongoose.connect(cnctionString, {
 
 // Define a schema and model
 const UserSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
   email: String,
-  password: String
+  password: String,
+  pfpPath: String
 });
 const UserModel = mongoose.model('User', UserSchema);
 
 const TutoringSchema = new mongoose.Schema({
+  authorsPfpPath: String,
+  authorsFirstName: String,
+  authorsLastName: String,
   authorsEmail: String,
   subject: String,
   unit: String,
   topic: String,
-  description: String,
-  rating: Number
+  description: String
 });
 const TutoringModel = mongoose.model('Tutoring', TutoringSchema);
 
@@ -74,8 +79,11 @@ app.post('/register-form', async (req, res) => {
     } else {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const userData = new UserModel({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
-        password: hashedPassword
+        password: hashedPassword,
+        pfpPath: 'img/pfp/default.png'
       });
       await userData.save();
       return res.redirect('/login.html');
@@ -94,7 +102,7 @@ app.post('/login-form', async (req, res) => {
     if (user) {
       const match = await bcrypt.compare(req.body.password, user.password);
       if (match) {
-        req.session.user = email;
+        req.session.user = user;
         return res.redirect('/index.html');
       } else {
         req.session.nrOfTries = (req.session.nrOfTries || 0) + 1;
@@ -155,13 +163,17 @@ app.get('/logout', (req, res) => {
 // Add tutoring route
 app.post('/add-tutoring-form', async (req, res) => {
   try {
+    const description = req.body.description.trim() === '' ? 'Brak' : req.body.description;
+
     const tutoringData = new TutoringModel({
-      authorsEmail: req.session.user,
+      authorsPfpPath: req.session.user.pfpPath,
+      authorsFirstName: req.session.user.firstName,
+      authorsLastName: req.session.user.lastName,
+      authorsEmail: req.session.user.email,
       subject: req.body.subject,
       unit: req.body.unit,
       topic: req.body.topic,
-      description: req.body.description,
-      rating: 0
+      description: description
     });
     await tutoringData.save();
     return res.redirect('/dodaj_zgloszenie.html');
@@ -173,13 +185,14 @@ app.post('/add-tutoring-form', async (req, res) => {
 
 // Search tutoring route
 app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
-  const { user, subject, unit, topic } = req.body;
+  const { authorsFirstName, authorsLastName, subject, unit, topic } = req.body;
 
   try {
     let tutorings = await TutoringModel.find({});
     const searchCriteria = [
-      { key: 'authorsEmail', value: user },
-      { key: 'subject', value: subject },
+      { key: 'authorsFirstName', value: authorsFirstName },
+      { key: 'authorsLastName', value: authorsLastName },
+      { key: 'subject', value: subject !== 'all' ? subject : null },
       { key: 'unit', value: unit },
       { key: 'topic', value: topic }
     ];
