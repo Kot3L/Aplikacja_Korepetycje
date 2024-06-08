@@ -262,7 +262,7 @@ app.get('/kalendarz.html', isAuthenticated, (req, res) => {
 });
 
 app.get('/profil.html', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'profil.html'));
+  res.render('profil', { user: req.session.user });
 });
 
 // Server responses section
