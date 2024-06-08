@@ -18,40 +18,37 @@
     </header>
     <main>
         <section>
+            <div class="personal_info_area">
+                <button class="edit_profile">Edytuj profil <i class="bi bi-pen"></i></button>
+                <div class="personal_info">
+                    <div class="info_col1">
+                        <label for="firstName">Imię:</label>
+                        <label for="lastName">Nazwisko:</label>
+                        <label for="email">Email:</label>
+                        <label for="password">Hasło:</label>
+                        <label for="pfp">Zdjęcie profilowe:</label>
+                    </div>
+                    <form class="info_col2" action="" name="personal_info">
+                        <input type="text" name="firstName" id="firstName" value="Connor" disabled>
+                        <input type="text" name="lastName" id="lastName" value="Mcgregor" disabled>
+                        <input type="email" name="email" id="email" value="connor.mcgregor@gmail.com" disabled>
+                        <input type="password" name="password" id="password" value="skibidiToilet" disabled>
+                        <input type="file" name="pfp" id="pfp" disabled>
+                        <input type="submit" value="Zapisz" id="submit">
+                    </form>
+                </div>
+            </div>
             <div class="container">
                 <div class="block">
                     <a href="opinie.html"><p>Opinie <i class="bi bi-bookmark-star"></i></p></a>
                 </div>
                 <div class="block">
-                    <a href="profil.html"><p>Wyloguj <i class="bi bi-box-arrow-in-right"></i></p></a>
-                </div>
-            </div>
-            <div class="personal_info_area">
-                <button class="edit_profile">Edytuj profil <i class="bi bi-pen"></i></button>
-                <div class="personal_info">
-                    <div class="info_col1">
-                        <label for="imie">Imię:</label>
-                        <label for="nazwisko">Nazwisko:</label>
-                        <label for="haslo">Email:</label>
-                        <label for="haslo">Hasło:</label>
-                        <label for="Github">Github:</label>
-                        <label for="profilowe">Zdjęcie profilowe:</label>
-                    </div>
-                    <form class="info_col2" action="" name="personal_info">
-                        <input type="text" name="imie" value="Connor" disabled>
-                        <input type="text" name="nazwisko" value="Mcgregor" disabled>
-                        <input type="email" name="email" value="connor.mcgregor@gmail.com" disabled>
-                        <input type="password" name="haslo" value="skibidiToilet" disabled>
-                        <input type="text" name="github-nazwa" value="TheNotoriousMMA" disabled>
-                        <input type="file" name="profilowe" disabled>
-                        <input type="submit" value="Zapisz" id="submit">
-                    </form>
+                    <a href="login.html"><p>Wyloguj <i class="bi bi-box-arrow-in-right"></i></p></a>
                 </div>
             </div>
         </section>
         <aside>
             <img src="img/conor.png" alt="pfp">
-            <h4>Connor Mcgregor</h4>
             <div class="stars_container">
                 <i class="bi bi-star-fill"></i>
                 <i class="bi bi-star-fill"></i>
@@ -59,17 +56,15 @@
                 <i class="bi bi-star-fill"></i>
                 <i class="bi bi-star-fill"></i>
             </div>
-            <div class="info_container">
-                <p><i class="bi bi-envelope"></i> Email:<br> connor.mcgregor@gmail.com</p>
-                <p><i class="bi bi-github"></i> Github:<br> TheNotoriousMMA</p>
-            </div>
+            <h4 style="font-weight: bolder;">Connor Mcgregor</h4>
+            <p>connor.mcgregor@gmail.com</p>
         </aside>
     </main>
     <footer>
         <div class="icon-container">
-            <a href="korepetytorzy.html"><i class="bi bi-people"></i></a>
-            <a href="add_korepetycje.html"><i class="bi bi-person-plus"></i></a>
-            <a href="glowna.html"><i class="bi bi-house"></i></a>
+            <a href="zgloszenia.html"><i class="bi bi-people"></i></a>
+            <a href="dodaj_zgloszenie.html"><i class="bi bi-person-plus"></i></a>
+            <a href="index.html"><i class="bi bi-house"></i></a>
             <a href="kalendarz.html"><i class="bi bi-calendar4-event"></i></a>
             <a href="profil.html"><i class="bi bi-person-circle active"></i></a>
         </div>

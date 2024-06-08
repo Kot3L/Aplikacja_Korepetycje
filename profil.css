@@ -2,26 +2,8 @@
 
 main {
     display: flex;
-    height: auto;
-    flex-direction: row;
-    align-items: center;
-    padding: 0 4rem 15rem 4rem;
-}
-
-/* Header */
-
-header {
-    width: 100%;
-    height: 20vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-h1 {
-    padding: .5em;
-    color: #012676;
-    font-size: 4rem;
+    justify-content: center;
+    margin-top: 3rem;
 }
 
 /* Section */
@@ -35,24 +17,17 @@ section {
 }
 
 .container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-    width: 90%;
-    max-width: 750px;
+    width: 85%;
+    display: flex;
+    justify-content: space-evenly;
 }
 
 .block {
+    width: 40%;
     background-color: #012676;
-    border-radius: 3px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border-radius: 0.5rem;
     color: white;
-    font-weight: 100;
     font-size: large;
-    border-radius: 4.5px;
-    max-width: 400px;
 }
 
 .block:hover {
@@ -65,9 +40,11 @@ section {
 
 .block a, .block a:hover {
     all: unset;
-    width: 100%;
-    padding: 20px;
     cursor: pointer;
+}
+
+.block p {
+    padding: 1.5rem 1rem;
 }
 
 aside {
@@ -76,6 +53,7 @@ aside {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    height: 30rem;
 }
 
 aside > img {
@@ -100,8 +78,7 @@ aside > img {
 
 .stars_container i {
     font-size: 1.5rem;
-    justify-content: space-between;
-    color: rgb(186, 186, 1);
+    color: rgb(255, 166, 0);
 }
 
 .info_container i {
@@ -116,6 +93,7 @@ aside > img {
     color: rgb(107, 107, 107);
     padding: 1rem 2rem;
 }
+
 .info_col1, .info_col2 {
     display: flex;
     flex-direction: column;
