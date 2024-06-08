@@ -28,11 +28,11 @@
                         <label for="password">Hasło:</label>
                         <label for="pfp">Zdjęcie profilowe:</label>
                     </div>
-                    <form class="info_col2" action="/profile-form" method="POST">
+                    <form class="info_col2" action="/profile-form" method="POST" enctype="multipart/form-data">
                         <input type="text" name="firstName" id="firstName" value="<%= user.firstName %>" disabled required>
                         <input type="text" name="lastName" id="lastName" value="<%= user.lastName %>" disabled required>
                         <input type="email" name="email" id="email" value="<%= user.email %>" disabled required>
-                        <input type="password" name="password" id="password" value="<%= user.password %>" disabled required>
+                        <input type="password" name="password" id="password" value="<%= user.unhashedPassword %>" disabled required>
                         <input type="file" name="pfp" id="pfp" disabled>
                         <input type="submit" id="submit" value="Zapisz">
                     </form>

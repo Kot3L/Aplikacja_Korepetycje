@@ -21,9 +21,9 @@
             <% items.forEach(item => { %>
             <article class="result">
                 <div class="user_info">
-                    <img src="<%= item.authorsPfpPath %>">
+                    <img src="<%= item.author.pfpPath %>">
                     <div class="info">
-                        <p class="username"><b><%= item.authorsFirstName %> <%= item.authorsLastName %></b><br><%= item.authorsEmail %></p>
+                        <p class="username"><b><%= item.author.firstName %> <%= item.author.lastName %></b><br><%= item.author.email %></p>
                     </div>
                 </div>
                 <div class="sbj_info">

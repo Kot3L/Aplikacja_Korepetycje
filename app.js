@@ -1,14 +1,16 @@
 const express = require('express');
-const Fuse = require('fuse.js');
 const session = require('express-session');
-const bcrypt = require('bcrypt');
 const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cnctionString = require('./cnctionString.js');
-const port = 3000;
 const routes = require('./routes/index');
+const bcrypt = require('bcrypt');
+const Fuse = require('fuse.js');
+const multer = require('multer');
+const fs = require('fs');
+const port = 3000;
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
@@ -59,10 +61,11 @@ const UserSchema = new mongoose.Schema({
 const UserModel = mongoose.model('User', UserSchema);
 
 const TutoringSchema = new mongoose.Schema({
-  authorsPfpPath: String,
-  authorsFirstName: String,
-  authorsLastName: String,
-  authorsEmail: String,
+  author: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   subject: String,
   unit: String,
   topic: String,
@@ -102,7 +105,10 @@ app.post('/login-form', async (req, res) => {
     if (user) {
       const match = await bcrypt.compare(req.body.password, user.password);
       if (match) {
-        req.session.user = user;
+        req.session.user = {
+          ...user.toObject(),
+          unhashedPassword: password
+        };
         return res.redirect('/index.html');
       } else {
         req.session.nrOfTries = (req.session.nrOfTries || 0) + 1;
@@ -163,17 +169,12 @@ app.get('/logout', (req, res) => {
 // Add tutoring route
 app.post('/add-tutoring-form', async (req, res) => {
   try {
-    const description = req.body.description.trim() === '' ? 'Brak' : req.body.description;
-
     const tutoringData = new TutoringModel({
-      authorsPfpPath: req.session.user.pfpPath,
-      authorsFirstName: req.session.user.firstName,
-      authorsLastName: req.session.user.lastName,
-      authorsEmail: req.session.user.email,
+      author: req.session.user._id,
       subject: req.body.subject,
       unit: req.body.unit,
       topic: req.body.topic,
-      description: description
+      description: req.body.description || 'Brak'
     });
     await tutoringData.save();
     return res.redirect('/dodaj_zgloszenie.html');
@@ -185,16 +186,14 @@ app.post('/add-tutoring-form', async (req, res) => {
 
 // Search tutoring route
 app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
-  const { authorsFirstName, authorsLastName, subject, unit, topic } = req.body;
-
   try {
-    let tutorings = await TutoringModel.find({});
+    let tutorings = await TutoringModel.find().populate('author');
     const searchCriteria = [
-      { key: 'authorsFirstName', value: authorsFirstName },
-      { key: 'authorsLastName', value: authorsLastName },
-      { key: 'subject', value: subject !== 'all' ? subject : null },
-      { key: 'unit', value: unit },
-      { key: 'topic', value: topic }
+      { key: 'author.firstName', value: req.body.firstName },
+      { key: 'author.lastName', value: req.body.lastName },
+      { key: 'subject', value: req.body.subject !== 'all' ? req.body.subject : null },
+      { key: 'unit', value: req.body.unit },
+      { key: 'topic', value: req.body.topic }
     ];
     const filteredCriteria = searchCriteria.filter(criteria => criteria.value);
     if (filteredCriteria.length > 0) {
@@ -215,6 +214,61 @@ app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
   } catch (err) {
     console.error('Failed to retrieve tutorings:', err);
     return res.status(500).send('Failed to retrieve tutorings');
+  }
+});
+
+// Configure Multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/img/pfp');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage: storage });
+
+// Profile route
+app.post('/profile-form', isAuthenticated, upload.single('pfp'), async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const { firstName, lastName, email, password } = req.body;
+
+    const user = await UserModel.findById(userId);
+
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+    if (email) user.email = email;
+
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.password = hashedPassword;
+    }
+
+    if (req.file) {
+      if (user.pfpPath && user.pfpPath !== 'img/pfp/default.png') {
+        const oldPfpPath = path.join(__dirname, 'public', user.pfpPath);
+        fs.unlink(oldPfpPath, (err) => {
+          if (err) {
+            console.error('Failed to delete old profile picture:', err);
+          }
+        });
+      }
+
+      user.pfpPath = 'img/pfp/' + req.file.filename;
+    }
+
+    await user.save();
+
+    req.session.user = {
+      ...user.toObject(),
+      unhashedPassword: password || req.session.user.unhashedPassword
+    };
+
+    res.redirect('/profil.html');
+  } catch (err) {
+    console.error('Failed to update profile:', err);
+    res.status(500).send('Failed to update profile');
   }
 });
 
