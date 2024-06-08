@@ -1,33 +1,8 @@
-/* Header */
-
-header {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    height: 10vh;
-    justify-content: space-between;
-    align-items: center;
-}
-
-h1 {
-    padding: .5em;
-    color: #012676;
-    font-size: 4rem;
-}
-
-.logo {
-    width: 8rem;
-    height: auto;
-    padding: 0;
-    margin-right: 2vw;
-}
-
 main {
     display: flex;
 }
 
 aside {
-    margin-top: 2rem;
     width: 25%;
     height: 75vh;
     display: flex;
@@ -38,24 +13,15 @@ aside {
 
 .event_box {
     width: 75%;
-    height: 46%;
-    background-color: #f3f3f3;
-    border-radius: 5px;
-    -webkit-box-shadow: 6px 15px 14px -13px rgba(117, 117, 117, 1);
-    -moz-box-shadow: 6px 15px 14px -13px rgba(117, 117, 117, 1);
-    box-shadow: 6px 15px 14px -13px rgba(117, 117, 117, 1);
-}
-
-.neme {
-    padding-left: 1rem;
-    font-size: 1.3rem;
-    height: 15%;
-    display: flex;
-    align-items: center;
+    height: 90vh;
+    background-color: #E4E4E7;
+    margin-top: 3rem;
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 15px 15px 20px -10px rgba(66, 68, 90, 0.5);
 }
 
 section {
-    margin-top: 2rem;
     width: 70%;
     height: 75vh;
     display: flex;

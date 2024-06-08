@@ -95,7 +95,7 @@ app.post('/login-form', async (req, res) => {
       const match = await bcrypt.compare(req.body.password, user.password);
       if (match) {
         req.session.user = email;
-        return res.redirect('/glowna.html');
+        return res.redirect('/index.html');
       } else {
         req.session.nrOfTries = (req.session.nrOfTries || 0) + 1;
         if (req.session.nrOfTries == 4) {
@@ -105,7 +105,7 @@ app.post('/login-form', async (req, res) => {
             <head>
               <script>
                 alert("To na pewno ty?");
-                window.location.href = '/index.html';
+                window.location.href = '/register.html';
               </script>
             </head>
             <body></body>
@@ -164,7 +164,7 @@ app.post('/add-tutoring-form', async (req, res) => {
       rating: 0
     });
     await tutoringData.save();
-    return res.redirect('/add_korepetycje.html');
+    return res.redirect('/dodaj_zgloszenie.html');
   } catch (err) {
     console.error('Failed to save form data:', err);
     return res.status(500).send('Failed to save form data');
@@ -232,16 +232,16 @@ app.get('/login.html', checkAuthRequired, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
-app.get('/korepetytorzy.html', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'korepetytorzy.html'));
+app.get('/zgloszenia.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'zgloszenia.html'));
 });
 
-app.get('/add_korepetycje.html', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'add_korepetycje.html'));
+app.get('/dodaj_zgloszenie.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'dodaj_zgloszenie.html'));
 });
 
-app.get('/glowna.html', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'glowna.html'));
+app.get('/index.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 app.get('/kalendarz.html', isAuthenticated, (req, res) => {

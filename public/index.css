@@ -1,26 +1,28 @@
-/* Main */
-
-.result_posts {
-    width: 100%;
+main {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    gap: 2.5rem;
-    margin: 4rem 0;
-    font-size: 1rem;
+    margin-top: 3rem;
+}
+
+article {
+    background-color: #E4E4E7;
+    flex-basis: 35%;
+    height: 60vh;
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 15px 15px 20px -10px rgba(66, 68, 90, 0.5);
+    margin: 2rem;
 }
 
 .result {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    width: 70vw;
+    width: 35vw;
     height: auto;
     padding: 2rem 4rem 2rem 4rem;
-    border-radius: 1rem;
-    background-color: #E4E4E7;
-    box-shadow: 15px 15px 20px -10px rgba(66, 68, 90, 0.5);
+    margin: 2rem;
+    background-color: white;
 }
 
 .result:last-child {
@@ -50,6 +52,11 @@
     font-weight: bolder;
 }
 
+.stars_container i {
+    font-size: 1.5rem;
+    color: rgb(255, 166, 0);
+}
+
 .description {
     display: flex;
     flex-direction: column;
@@ -66,6 +73,13 @@ h5 {
 
 .username {
     margin-right: auto;
+}
+
+.vertical_line {
+    height: 5rem;
+    width: 0.25rem;
+    margin: 0 1rem;
+    background-color: #E4E4E7;
 }
 
 .result_link {
@@ -107,4 +121,28 @@ h5 {
     padding: 0.5rem;
     border-radius: 30px;
     background-color: #a2a5f8;
+}
+
+@media(max-width: 768px) {
+    /* Header */
+
+    .logo {
+        display: none;
+    }
+
+    /* Main */
+
+    main {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    article {
+        background-color: #E4E4E7;
+        flex-basis: 80%;
+        box-shadow: 0.5vw 0.5vw rgb(177, 177, 177);
+    }
 }

@@ -7,6 +7,25 @@
     font-variation-settings: "slnt" 0;
 }
 
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+h1 {
+    padding: .5em;
+    color: #012676;
+    font-size: 4rem;
+}
+
+.logo {
+    width: 8rem;
+    height: auto;
+    padding: 0;
+    margin-right: 2vw;
+}
+
 footer {
     display: flex;
     justify-content: center;

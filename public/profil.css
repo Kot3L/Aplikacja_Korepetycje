@@ -2,26 +2,8 @@
 
 main {
     display: flex;
-    height: auto;
-    flex-direction: row;
-    align-items: center;
-    padding: 0 4rem 15rem 4rem;
-}
-
-/* Header */
-
-header {
-    width: 100%;
-    height: 20vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-h1 {
-    padding: .5em;
-    color: #012676;
-    font-size: 4rem;
+    justify-content: center;
+    margin-top: 3rem;
 }
 
 /* Section */
@@ -35,24 +17,17 @@ section {
 }
 
 .container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-    width: 90%;
-    max-width: 750px;
+    width: 85%;
+    display: flex;
+    justify-content: space-evenly;
 }
 
 .block {
+    width: 40%;
     background-color: #012676;
-    border-radius: 3px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border-radius: 0.5rem;
     color: white;
-    font-weight: 100;
     font-size: large;
-    border-radius: 4.5px;
-    max-width: 400px;
 }
 
 .block:hover {
@@ -65,9 +40,11 @@ section {
 
 .block a, .block a:hover {
     all: unset;
-    width: 100%;
-    padding: 20px;
     cursor: pointer;
+}
+
+.block p {
+    padding: 1.5rem 1rem;
 }
 
 aside {
@@ -76,6 +53,7 @@ aside {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    height: 30rem;
 }
 
 aside > img {
@@ -100,15 +78,15 @@ aside > img {
 
 .stars_container i {
     font-size: 1.5rem;
-    justify-content: space-between;
-    color: rgb(186, 186, 1);
+    color: rgb(255, 166, 0);
 }
 
 .info_container i {
     font-size: 1.5rem;
 }
 
-table {
+.personal_info {
+    display: flex;
     width: 100%;
     background-color: rgb(198, 198, 198);
     border-radius: 15px;
@@ -116,16 +94,58 @@ table {
     padding: 1rem 2rem;
 }
 
-td {
-    padding: 1rem;
-    border-bottom: 2px dotted rgb(137, 137, 137);
+.info_col1, .info_col2 {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+
 }
 
-td:nth-child(2) {
+.personal_info input[type=text], .personal_info input[type=password], .personal_info input[type=email], .personal_info input[type=file] {
+    color: rgb(107, 107, 107);
     text-align: end;
+    padding: 1rem;
+    border: none; 
+    background-color: rgb(198, 198, 198);
+    border-bottom: 2px dotted rgb(137, 137, 137);
+    font-size: 0.9rem;
 }
 
-.personal_info {
+.personal_info input:focus {
+    outline: none;
+    border-bottom: 2px solid rgb(137, 137, 137);
+}
+
+.info_col1 > * {
+    font-size: 0.9rem;
+    padding: 1rem;
+}
+
+.personal_info input[type=submit] {
+    padding: none;
+    text-align: center;
+    color: black;
+    height: 40px;
+    background-color: #c0c0c0;
+    border: none;
+    cursor: pointer;
+    border: 1px solid rgb(139, 139, 139);
+    border-radius: 10px;
+    margin-top: 0.8rem;
+    display: none;
+}
+
+.personal_info input[type=submit]:hover {
+    border-color: #fff;
+    color: #fff;
+    transition: all 0.1s ease;
+}
+
+.personal_info input[type=submit]:active {
+    background-color: #e6e6e6be;
+}
+
+.personal_info_area {
     width: 85%;
     display: flex;
     flex-direction: column;
@@ -161,7 +181,7 @@ td:nth-child(2) {
     .container {
         grid-template-columns: 1fr;
     }
-}
+} 
 
 @media (max-width: 980px) {
     main {
