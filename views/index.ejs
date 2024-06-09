@@ -61,9 +61,12 @@
                             <div class="horizontal_box">
                                 <% if (userTutoring.status === 'active') { %>
                                     <button class="result_link accept">Zaakceptuj <i class="bi bi-check-lg"></i></button>
-                                    <button class="result_link deny">Odrzuć <i class="bi bi-x-lg"></i></button>
+                                    <form action="/reject-tutoring-form" method="POST">
+                                        <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                        <button class="result_link deny">Odrzuć <i class="bi bi-x-lg"></i></button>
+                                    </form>
                                 <% } %>
-                                <form action="/delete-userTutoring-form" method="POST">
+                                <form action="/delete-tutoring-form" method="POST">
                                     <input type="hidden" name="id" value="<%= userTutoring._id %>">
                                     <button class="result_link delete">Usuń <i class="bi bi-trash"></i></button>
                                 </form>

@@ -18,11 +18,11 @@ article {
 
 h2 {
     position: absolute;
-    top: 10rem
+    top: 10rem;
 }
 
 form {
-    width: 30rem;
+    display: contents;
 }
 
 .result {
