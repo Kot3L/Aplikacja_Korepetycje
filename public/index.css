@@ -25,11 +25,14 @@ form {
     display: contents;
 }
 
+.transparent {
+    opacity: 0.5;
+}
+
 .result {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    width: 35vw;
     height: auto;
     padding: 2rem 4rem 2rem 4rem;
     margin: 2rem;
@@ -52,11 +55,23 @@ form {
     border-radius: 100%;
 }
 
+.vertical_box {
+    order: 3;
+    margin-top: -2.9rem;
+    margin-left: auto;
+}
+
+.vertical_box input[type="date"] {
+    width: 8.75rem;
+    padding: .5rem;
+    margin-bottom: .5rem;
+}
+
 .info {
     display: flex;
     flex-direction: column;
     line-height: 1.5rem;
-    gap: 0.25rem;
+    gap: .25rem;
     margin-top: -0.1rem;
 }
 
@@ -95,7 +110,7 @@ h5 {
 }
 
 .result_link {
-    width: 17%;
+    width: 10rem;
     height: 40px;
     background-color: #f8b420;
     border: none;

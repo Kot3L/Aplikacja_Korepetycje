@@ -308,6 +308,28 @@ app.post('/profile-form', isAuthenticated, upload.single('pfp'), async (req, res
   }
 });
 
+// Accept tutoring route
+app.post('/accept-tutoring-form', isAuthenticated, async (req, res) => {
+  try {
+    const tutoringId = req.body.id;
+
+    const tutoring = await TutoringModel.findByIdAndUpdate(
+      tutoringId,
+      { status: 'accepted' },
+      { new: true }
+    );
+
+    if (tutoring) {
+      res.redirect('/index.html');
+    } else {
+      res.status(404).send('Tutoring session not found.');
+    }
+  } catch (err) {
+    console.error('Failed to update tutoring session status:', err);
+    res.status(500).send('Failed to update tutoring session status');
+  }
+});
+
 // Reject tutoring route
 app.post('/reject-tutoring-form', isAuthenticated, async (req, res) => {
   try {

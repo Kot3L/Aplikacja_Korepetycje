@@ -29,19 +29,33 @@
                                 </div>
                                 <div class="vertical_line"></div>
                                 <% if (userTutoring.tutor) { %>
-                                    <img src="<%= userTutoring.tutor.pfpPath %>">
-                                    <div class="info">
-                                        <p class="username"><b><%= userTutoring.tutor.firstName %> <%= userTutoring.tutor.lastName %></b><br><%= userTutoring.tutor.email %></p>
-                                        <div class="stars_container">
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
+                                    <% if (userTutoring.status === 'active') { %>
+                                        <img src="<%= userTutoring.tutor.pfpPath %>" class="transparent">
+                                        <div class="info transparent">
+                                            <p class="username"><b><%= userTutoring.tutor.firstName %> <%= userTutoring.tutor.lastName %></b><br><%= userTutoring.tutor.email %></p>
+                                            <div class="stars_container">
+                                                <i class="bi bi-star"></i>
+                                                <i class="bi bi-star"></i>
+                                                <i class="bi bi-star"></i>
+                                                <i class="bi bi-star"></i>
+                                                <i class="bi bi-star"></i>
+                                            </div>
                                         </div>
-                                    </div>
+                                    <% } else { %>
+                                        <img src="<%= userTutoring.tutor.pfpPath %>">
+                                        <div class="info">
+                                            <p class="username"><b><%= userTutoring.tutor.firstName %> <%= userTutoring.tutor.lastName %></b><br><%= userTutoring.tutor.email %></p>
+                                            <div class="stars_container">
+                                                <i class="bi bi-star"></i>
+                                                <i class="bi bi-star"></i>
+                                                <i class="bi bi-star"></i>
+                                                <i class="bi bi-star"></i>
+                                                <i class="bi bi-star"></i>
+                                            </div>
+                                        </div>
+                                    <% } %>
                                 <% } else { %>
-                                    <div class="info">
+                                    <div class="info transparent">
                                         <p class="username"><b>BRAK KOREPETYTORA</b><br>Oczekiwanie</p>
                                     </div>
                                 <% } %>
@@ -59,17 +73,33 @@
                                 <p><%= userTutoring.description %></p>
                             </div>
                             <div class="horizontal_box">
-                                <% if (userTutoring.status === 'active') { %>
-                                    <button class="result_link accept">Zaakceptuj <i class="bi bi-check-lg"></i></button>
+                                <% if (userTutoring.status === 'pending') { %>
+                                    <form action="/delete-tutoring-form" method="POST">
+                                        <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                        <button class="result_link delete">Usuń <i class="bi bi-trash"></i></button>
+                                    </form>
+                                <% } else if (userTutoring.status === 'active') { %>
+                                    <form action="/accept-tutoring-form" method="POST">
+                                        <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                        <button class="result_link accept">Zaakceptuj <i class="bi bi-check-lg"></i></button>
+                                    </form>
                                     <form action="/reject-tutoring-form" method="POST">
                                         <input type="hidden" name="id" value="<%= userTutoring._id %>">
                                         <button class="result_link deny">Odrzuć <i class="bi bi-x-lg"></i></button>
                                     </form>
+                                <% } else { %>
+                                    <form action="/reject-tutoring-form" method="POST">
+                                        <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                        <button class="result_link deny">Odrzuć <i class="bi bi-x-lg"></i></button>
+                                    </form>
+                                    <div class="vertical_box">
+                                        <form action="/request-date-form" method="POST">
+                                            <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                            <input type="date" name="date" id="date" required><br>
+                                            <button class="result_link">Zaplanuj <i class="bi bi-arrow-right"></i></button>
+                                        </form>
+                                    </div>
                                 <% } %>
-                                <form action="/delete-tutoring-form" method="POST">
-                                    <input type="hidden" name="id" value="<%= userTutoring._id %>">
-                                    <button class="result_link delete">Usuń <i class="bi bi-trash"></i></button>
-                                </form>
                             </div>
                         </article>
                     <% }); %>
@@ -95,10 +125,17 @@
                                     </div>
                                 </div>
                                 <div class="vertical_line"></div>
-                                <img src="<%= userCourse.author.pfpPath %>">
-                                <div class="info">
-                                    <p class="username"><b><%= userCourse.author.firstName %> <%= userCourse.author.lastName %></b><br><%= userCourse.author.email %></p>
-                                </div>
+                                <% if (userCourse.status === 'active') { %>
+                                    <img src="<%= userCourse.author.pfpPath %>" class="transparent">
+                                    <div class="info transparent">
+                                        <p class="username"><b><%= userCourse.author.firstName %> <%= userCourse.author.lastName %></b><br><%= userCourse.author.email %></p>
+                                    </div>
+                                <% } else { %>
+                                    <img src="<%= userCourse.author.pfpPath %>">
+                                    <div class="info">
+                                        <p class="username"><b><%= userCourse.author.firstName %> <%= userCourse.author.lastName %></b><br><%= userCourse.author.email %></p>
+                                    </div>
+                                <% } %>
                             </div>
                             <div class="sbj_info">
                                 <h5>Informacje</h5>
@@ -113,7 +150,19 @@
                                 <p><%= userCourse.description %></p>
                             </div>
                             <div class="horizontal_box">
-                                <button class="result_link waiting">OCZEKIWANIE</button>
+                                <form action="/reject-tutoring-form" method="POST">
+                                    <input type="hidden" name="id" value="<%= userCourse._id %>">
+                                    <button class="result_link deny">Odrzuć <i class="bi bi-x-lg"></i></button>
+                                </form>
+                                <% if (userCourse.status === 'accepted') { %>
+                                    <div class="vertical_box">
+                                        <form action="/request-date-form" method="POST">
+                                            <input type="hidden" name="id" value="<%= userCourse._id %>">
+                                            <input type="date" name="date" id="date" required><br>
+                                            <button class="result_link">Zaplanuj <i class="bi bi-arrow-right"></i></button>
+                                        </form>
+                                    </div>
+                                <% } %>
                             </div>
                         </article>
                     <% }); %>
