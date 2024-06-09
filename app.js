@@ -69,7 +69,13 @@ const TutoringSchema = new mongoose.Schema({
   subject: String,
   unit: String,
   topic: String,
-  description: String
+  description: String,
+  status: String,
+  tutor: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User',
+    required: false
+  }
 });
 const TutoringModel = mongoose.model('Tutoring', TutoringSchema);
 
@@ -174,7 +180,9 @@ app.post('/add-tutoring-form', async (req, res) => {
       subject: req.body.subject,
       unit: req.body.unit,
       topic: req.body.topic,
-      description: req.body.description || 'Brak'
+      description: req.body.description || 'Brak',
+      status: 'pending',
+      tutor: null
     });
     await tutoringData.save();
     return res.redirect('/dodaj_zgloszenie.html');
@@ -187,7 +195,12 @@ app.post('/add-tutoring-form', async (req, res) => {
 // Search tutoring route
 app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
   try {
-    let tutorings = await TutoringModel.find().populate('author');
+    const userId = req.session.user._id;
+    let tutorings = await TutoringModel.find({ 
+      author: { $ne: userId }, 
+      status: 'pending' 
+    }).populate('author').populate('tutor');
+
     const searchCriteria = [
       { key: 'author.firstName', value: req.body.firstName },
       { key: 'author.lastName', value: req.body.lastName },
@@ -214,6 +227,29 @@ app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
   } catch (err) {
     console.error('Failed to retrieve tutorings:', err);
     return res.status(500).send('Failed to retrieve tutorings');
+  }
+});
+
+// Activate tutoring route
+app.post('/activate-tutoring-form', isAuthenticated, async (req, res) => {
+  try {
+    const tutoringId = req.body.id;
+    const userId = req.session.user._id;
+
+    const tutoring = await TutoringModel.findOneAndUpdate(
+      { _id: tutoringId, status: 'pending' },
+      { status: 'active', tutor: userId },
+      { new: true }
+    );
+
+    if (tutoring) {
+      res.redirect('/index.html');
+    } else {
+      res.status(404).send('Tutoring session not found or unauthorized.');
+    }
+  } catch (err) {
+    console.error('Failed to update tutoring session status:', err);
+    res.status(500).send('Failed to update tutoring session status');
   }
 });
 
@@ -281,7 +317,7 @@ app.post('/delete-tutoring-form', isAuthenticated, async (req, res) => {
     const tutoring = await TutoringModel.findOneAndDelete({ _id: tutoringId, author: userId });
     
     if (tutoring) {
-      res.redirect('/index.html'); // Redirect back to the main page after deletion
+      res.redirect('/index.html');
     } else {
       res.status(404).send('Tutoring session not found or unauthorized.');
     }
@@ -329,11 +365,12 @@ app.get('/dodaj_zgloszenie.html', isAuthenticated, (req, res) => {
 app.get('/index.html', isAuthenticated, async (req, res) => {
   try {
     const userId = req.session.user._id;
-    const tutorings = await TutoringModel.find({ author: userId }).populate('author');
-    res.render('index', { tutorings });
+    const userTutorings = await TutoringModel.find({ author: userId }).populate('author').populate('tutor');
+    const userCourses = await TutoringModel.find({ tutor: userId }).populate('author').populate('tutor');
+    res.render('index', { userTutorings, userCourses });
   } catch (err) {
-    console.error('Failed to retrieve user-specific tutorings:', err);
-    res.status(500).send('Failed to retrieve user-specific tutorings');
+    console.error('Failed to retrieve user-specific tutorings and courses:', err);
+    res.status(500).send('Failed to retrieve user-specific tutorings and courses');
   }
 });
 

@@ -22,7 +22,7 @@ h2 {
 }
 
 form {
-    width: 50rem;
+    width: 30rem;
 }
 
 .result {
@@ -159,8 +159,16 @@ h5 {
     background-color: rgb(75, 75, 75);
 }
 
-.disabled {
-    display: none;
+.waiting {
+    border-bottom: none;
+}
+
+.waiting:hover {
+    border-bottom: none;
+}
+
+.waiting:active {
+    background-color: #f8b420;
 }
 
 .subject_info {

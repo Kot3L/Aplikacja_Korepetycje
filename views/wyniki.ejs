@@ -38,7 +38,10 @@
                     <h5>Opis</h5>
                     <p><%= item.description %></p>
                 </div>
-                <button class="result_link">Przyjmij <i class="bi bi-arrow-right"></i></button>
+                <form action="/activate-tutoring-form" method="POST">
+                    <input type="hidden" name="id" value="<%= item._id %>">
+                    <button class="result_link">Przyjmij <i class="bi bi-arrow-right"></i></button>
+                </form>
             </article>
             <% }); %>
         </section>
