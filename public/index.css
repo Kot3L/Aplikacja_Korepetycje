@@ -6,12 +6,23 @@ main {
 
 article {
     background-color: #E4E4E7;
-    flex-basis: 35%;
+    flex-basis: 43%;
     height: 60vh;
     border-radius: 1rem;
     padding: 1rem;
     box-shadow: 15px 15px 20px -10px rgba(66, 68, 90, 0.5);
     margin: 2rem;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+h2 {
+    position: absolute;
+    top: 10rem
+}
+
+form {
+    width: 50rem;
 }
 
 .result {
@@ -23,18 +34,19 @@ article {
     padding: 2rem 4rem 2rem 4rem;
     margin: 2rem;
     background-color: white;
+    overflow-y: hidden;
 }
 
 .result:last-child {
     margin-bottom: 7rem;
 }
 
-.user_info {
+.horizontal_box {
     display: flex;
     gap: 1rem;
 }
 
-.user_info img {
+.horizontal_box img {
     width: 5rem;
     height: 5rem;
     border-radius: 100%;
@@ -87,19 +99,68 @@ h5 {
     height: 40px;
     background-color: #f8b420;
     border: none;
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
-    border-bottom: 6px rgb(216, 149, 26) solid;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+    border-bottom: .5rem rgb(216, 149, 26) solid;
 }
 
 .result_link:hover {
-    border-bottom: 4px rgb(216, 149, 26) solid;
+    border-bottom: .35rem rgb(216, 149, 26) solid;
     transition: all 0.1s ease;
 }
 
 .result_link:active {
     border-bottom: none;
     background-color: #f8b420be;
+}
+
+.accept {
+    color:#E4E4E7;
+    background-color: rgb(50, 175, 50);
+    border-bottom: .5rem rgb(25, 150, 25) solid;
+}
+
+.accept:hover {
+    border-bottom: .35rem rgb(25, 150, 25) solid;
+}
+
+.accept:active {
+    border-bottom: none;
+    background-color: rgb(75, 200, 75);
+}
+
+.deny {
+    color:#E4E4E7;
+    background-color: rgb(175, 50, 50);
+    border-bottom: .5rem rgb(150, 25, 25) solid;
+}
+
+.deny:hover {
+    border-bottom: .35rem rgb(150, 25, 25) solid;
+}
+
+.deny:active {
+    border-bottom: none;
+    background-color: rgb(200, 75, 75);
+}
+
+.delete {
+    color:#E4E4E7;
+    background-color: rgb(50, 50, 50);
+    border-bottom: .5rem rgb(25, 25, 25) solid;
+}
+
+.delete:hover {
+    border-bottom: .35rem rgb(25, 25, 25) solid;
+}
+
+.delete:active {
+    border-bottom: none;
+    background-color: rgb(75, 75, 75);
+}
+
+.disabled {
+    display: none;
 }
 
 .subject_info {

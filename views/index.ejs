@@ -18,29 +18,46 @@
         </header>
         <main>
             <article>
-                <h2>Twoje Zgłoszenia</h2>
-                <article class="result">
-                    <div class="user_info">
-                        <img src="img/conor.png">
-                        <div class="info">
-                            <p class="username"><b>Connor Mcgregor</b><br>connor.mcgregor@gmail.com</p>
-                        </div>
-                    </div>
-                    <div class="sbj_info">
-                        <h5>Informacje</h5>
-                        <div class="subject_info">
-                            <div class="subject">Matematyka</div>
-                            <div class="unit">Dział 2</div>
-                            <div class="topic">Dodawanie i odejmowanie</div>
-                        </div>
-                    </div>
-                    <button class="result_link">Wybierz <i class="bi bi-arrow-right"></i></button>
-                </article>
+                <h2>Twoje Zgłoszenia (Jako uczeń)</h2>
+                <% if (tutorings.length > 0) { %>
+                    <% tutorings.forEach(tutoring => { %>
+                        <article class="result">
+                            <div class="horizontal_box">
+                                <img src="<%= tutoring.author.pfpPath %>" alt="Profile Picture">
+                                <div class="info">
+                                    <p class="username"><b><%= tutoring.author.firstName %> <%= tutoring.author.lastName %></b><br><%= tutoring.author.email %></p>
+                                </div>
+                                <div class="vertical_line"></div>
+                                <div class="info">
+                                    <p class="username"><b>BRAK KOREPETYTORA</b><br>Oczekiwanie</p>
+                                </div>
+                            </div>
+                            <div class="sbj_info">
+                                <h5>Informacje</h5>
+                                <div class="subject_info">
+                                    <div class="subject"><%= tutoring.subject %></div>
+                                    <div class="unit"><%= tutoring.unit %></div>
+                                    <div class="topic"><%= tutoring.topic %></div>
+                                </div>
+                            </div>
+                            <div class="horizontal_box">
+                                <button class="result_link accept disabled">Zaakceptuj <i class="bi bi-check-lg"></i></button>
+                                <button class="result_link deny disabled">Odrzuć <i class="bi bi-x-lg"></i></button>
+                                <form action="/delete-tutoring-form" method="POST">
+                                    <input type="hidden" name="id" value="<%= tutoring._id %>">
+                                    <button class="result_link delete" onclick="">Usuń <i class="bi bi-trash"></i></button>
+                                </form>
+                            </div>
+                        </article>
+                    <% }); %>
+                <% } else { %>
+                    <p>Nie masz żadnych zgłoszeń.</p>
+                <% } %>
             </article>
             <article>
-                <h2>Twoje Kursy</h2>
+                <h2>Twoje Kursy (Jako korepetytor)</h2>
                 <article class="result">
-                    <div class="user_info">
+                    <div class="horizontal_box">
                         <img src="img/conor.png">
                         <div class="info">
                             <p class="username"><b>Connor Mcgregor</b><br>connor.mcgregor@gmail.com</p>

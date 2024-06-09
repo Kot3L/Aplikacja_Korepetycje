@@ -272,6 +272,25 @@ app.post('/profile-form', isAuthenticated, upload.single('pfp'), async (req, res
   }
 });
 
+// Delete tutoring route
+app.post('/delete-tutoring-form', isAuthenticated, async (req, res) => {
+  try {
+    const tutoringId = req.body.id;
+    const userId = req.session.user._id;
+
+    const tutoring = await TutoringModel.findOneAndDelete({ _id: tutoringId, author: userId });
+    
+    if (tutoring) {
+      res.redirect('/index.html'); // Redirect back to the main page after deletion
+    } else {
+      res.status(404).send('Tutoring session not found or unauthorized.');
+    }
+  } catch (err) {
+    console.error('Failed to delete tutoring session:', err);
+    res.status(500).send('Failed to delete tutoring session');
+  }
+});
+
 // Authentication middleware
 function isAuthenticated(req, res, next) {
   if (req.session.user) {
@@ -307,8 +326,15 @@ app.get('/dodaj_zgloszenie.html', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'dodaj_zgloszenie.html'));
 });
 
-app.get('/index.html', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+app.get('/index.html', isAuthenticated, async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const tutorings = await TutoringModel.find({ author: userId }).populate('author');
+    res.render('index', { tutorings });
+  } catch (err) {
+    console.error('Failed to retrieve user-specific tutorings:', err);
+    res.status(500).send('Failed to retrieve user-specific tutorings');
+  }
 });
 
 app.get('/kalendarz.html', isAuthenticated, (req, res) => {

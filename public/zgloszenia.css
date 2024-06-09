@@ -16,14 +16,15 @@ form * {
     margin: .5rem;
 }
 
-input {
+input, textarea {
     background-color: #D4D4D8;
     color: white;
     border: none;
     height: 7vh;
     width: 20rem;
-    padding-left: .5rem;
+    padding: .5rem;
     border-radius: 2px;
+    resize: none;
 }
 
 select {
@@ -31,8 +32,8 @@ select {
     color: white;
     border: none;
     height: 7vh;
-    width: 20.6rem;
-    padding-left: .5rem;
+    width: 21rem;
+    padding: .5rem;
     border-radius: 2px;
 }
 
