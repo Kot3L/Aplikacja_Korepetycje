@@ -57,7 +57,8 @@ const UserSchema = new mongoose.Schema({
   lastName: String,
   email: String,
   password: String,
-  pfpPath: String
+  pfpPath: String,
+  rating: Number
 });
 const UserModel = mongoose.model('User', UserSchema);
 
@@ -95,14 +96,14 @@ const ReviewSchema = new mongoose.Schema({
     ref: 'User',
     required: false
   }
-});
+}, { timestamps: true });
 const ReviewModel = mongoose.model('Review', ReviewSchema);
 
 // Scheduled task to update tutoring statuses
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('* * * * *', async () => {
   try {
     const now = new Date();
-    const result = await TutoringModel.updateMany(
+    await TutoringModel.updateMany(
       { date: { $lt: now }, status: 'scheduled' },
       { status: 'completed' }
     );
@@ -124,7 +125,8 @@ app.post('/register-form', async (req, res) => {
         lastName: req.body.lastName,
         email: req.body.email,
         password: hashedPassword,
-        pfpPath: 'img/pfp/default.png'
+        pfpPath: 'img/pfp/default.png',
+        rating: 0
       });
       await userData.save();
       return res.redirect('/login.html');
@@ -379,6 +381,15 @@ app.post('/review-tutoring-form', isAuthenticated, async (req, res) => {
 
     await reviewData.save();
     await TutoringModel.findByIdAndDelete(tutoringId);
+
+    const reviews = await ReviewModel.find({ tutor: tutorId });
+    let averageRating = 0;
+    if (reviews.length > 0) {
+      const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+      averageRating = Math.round(totalRating / reviews.length);
+    }
+    await UserModel.findByIdAndUpdate(tutorId, { rating: averageRating });
+
     res.redirect('/index.html');
   } catch (err) {
     console.error('Failed to save review data:', err);
@@ -509,19 +520,57 @@ app.get('/login.html', checkAuthRequired, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
-app.get('/profil.html', isAuthenticated, (req, res) => {
-  res.render('profil', { user: req.session.user });
+app.get('/profil.html', isAuthenticated, async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const user = await UserModel.findById(userId);
+
+    res.render('profil', { user, unhashedPassword: req.session.user.unhashedPassword });
+  } catch (err) {
+    console.error('Failed to retrieve profile data:', err);
+    res.status(500).send('Failed to retrieve profile data');
+  }
 });
 
-app.get('/opinie.html', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'opinie.html'));
+app.get('/opinie.html', isAuthenticated, async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const reviews = await ReviewModel.find({ tutor: userId }).populate('author').sort({ createdAt: -1 }); // Sorting by createdAt in descending order
+    res.render('opinie', { reviews });
+  } catch (err) {
+    console.error('Failed to retrieve reviews:', err);
+    res.status(500).send('Failed to retrieve reviews');
+  }
 });
 
 app.get('/index.html', isAuthenticated, async (req, res) => {
   try {
     const userId = req.session.user._id;
-    const userTutorings = await TutoringModel.find({ author: userId }).populate('author').populate('tutor');
-    const userCourses = await TutoringModel.find({ tutor: userId, status: { $ne: 'completed' } }).populate('author').populate('tutor');
+
+    let userTutorings = await TutoringModel.find({ author: userId }).populate('author').populate('tutor');
+    let userCourses = await TutoringModel.find({ tutor: userId, status: { $ne: 'completed' } }).populate('author').populate('tutor');
+
+    // Function to sort tutorings by date and status
+    const sortTutorings = (tutorings) => {
+      // Separate the tutorings with and without dates
+      const withDates = tutorings.filter(tutoring => tutoring.date);
+      const withoutDates = tutorings.filter(tutoring => !tutoring.date);
+
+      // Sort tutorings with dates by date
+      withDates.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      // Sort by status within the date-sorted tutorings
+      const statusOrder = { 'scheduled': 1, 'accepted': 2, 'pending': 3 };
+      withDates.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
+
+      // Combine the sorted arrays
+      return [...withDates, ...withoutDates];
+    };
+
+    // Sort both userTutorings and userCourses
+    userTutorings = sortTutorings(userTutorings);
+    userCourses = sortTutorings(userCourses);
+
     res.render('index', { userTutorings, userCourses });
   } catch (err) {
     console.error('Failed to retrieve user-specific tutorings and courses:', err);

@@ -61,11 +61,13 @@
                                 <div class="info">
                                     <p class="username"><b><%= userTutoring.tutor.firstName %> <%= userTutoring.tutor.lastName %></b><br><%= userTutoring.tutor.email %></p>
                                     <div class="stars_container">
-                                        <i class="bi bi-star"></i>
-                                        <i class="bi bi-star"></i>
-                                        <i class="bi bi-star"></i>
-                                        <i class="bi bi-star"></i>
-                                        <i class="bi bi-star"></i>
+                                        <% for (let i = 1; i <= 5; i++) { %>
+                                            <% if (i <= userTutoring.tutor.rating) { %>
+                                                <i class="bi bi-star-fill"></i>
+                                            <% } else { %>
+                                                <i class="bi bi-star"></i>
+                                            <% } %>
+                                        <% } %>
                                     </div>
                                 </div>
                             <% } else { %>
@@ -172,11 +174,13 @@
                             <div class="info">
                                 <p class="username"><b><%= userCourse.tutor.firstName %> <%= userCourse.tutor.lastName %></b><br><%= userCourse.tutor.email %></p>
                                 <div class="stars_container">
-                                    <i class="bi bi-star"></i>
-                                    <i class="bi bi-star"></i>
-                                    <i class="bi bi-star"></i>
-                                    <i class="bi bi-star"></i>
-                                    <i class="bi bi-star"></i>
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <% if (i <= userCourse.tutor.rating) { %>
+                                            <i class="bi bi-star-fill"></i>
+                                        <% } else { %>
+                                            <i class="bi bi-star"></i>
+                                        <% } %>
+                                    <% } %>
                                 </div>
                             </div>
                             <div class="vertical_line"></div>

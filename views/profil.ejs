@@ -32,7 +32,7 @@
                         <input type="text" name="firstName" id="firstName" value="<%= user.firstName %>" disabled required>
                         <input type="text" name="lastName" id="lastName" value="<%= user.lastName %>" disabled required>
                         <input type="email" name="email" id="email" value="<%= user.email %>" disabled required>
-                        <input type="password" name="password" id="password" value="<%= user.unhashedPassword %>" disabled required>
+                        <input type="password" name="password" id="password" value="<%= unhashedPassword %>" disabled required>
                         <input type="file" name="pfp" id="pfp" disabled>
                         <input type="submit" id="submit" value="Zapisz">
                     </form>
@@ -50,11 +50,13 @@
         <aside>
             <img src="<%= user.pfpPath %>" alt="pfp">
             <div class="stars_container">
-                <i class="bi bi-star"></i>
-                <i class="bi bi-star"></i>
-                <i class="bi bi-star"></i>
-                <i class="bi bi-star"></i>
-                <i class="bi bi-star"></i>
+                <% for (let i = 1; i <= 5; i++) { %>
+                    <% if (i <= user.rating) { %>
+                        <i class="bi bi-star-fill"></i>
+                    <% } else { %>
+                        <i class="bi bi-star"></i>
+                    <% } %>
+                <% } %>
             </div>
             <h4 style="font-weight: bolder;"><%= user.firstName %> <%= user.lastName %></h4>
             <p><%= user.email %></p>
