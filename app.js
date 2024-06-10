@@ -75,7 +75,9 @@ const TutoringSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: 'User',
     required: false
-  }
+  },
+  date: Date,
+  dateRequester: String
 });
 const TutoringModel = mongoose.model('Tutoring', TutoringSchema);
 
@@ -182,7 +184,9 @@ app.post('/add-tutoring-form', async (req, res) => {
       topic: req.body.topic,
       description: req.body.description || 'Brak',
       status: 'pending',
-      tutor: null
+      tutor: null,
+      date: null,
+      dateRequester: null
     });
     await tutoringData.save();
     return res.redirect('/dodaj_zgloszenie.html');
@@ -250,6 +254,39 @@ app.post('/accept-tutoring-form', isAuthenticated, async (req, res) => {
   } catch (err) {
     console.error('Failed to update tutoring session status:', err);
     res.status(500).send('Failed to update tutoring session status');
+  }
+});
+
+// Request date route
+app.post('/request-date-form', isAuthenticated, async (req, res) => {
+  try {
+    const date = new Date(req.body.date);
+    const tutoringId = req.body.id;
+    const userId = req.session.user._id;
+
+    const tutoring = await TutoringModel.findById(tutoringId);
+
+    if (!tutoring) {
+      return res.status(404).send('Tutoring session not found.');
+    }
+
+    let requesterRole = '';
+    if (tutoring.author.equals(userId)) {
+      requesterRole = 'author';
+    } else if (tutoring.tutor.equals(userId)) {
+      requesterRole = 'tutor';
+    } else {
+      return res.status(403).send('You are not authorized to make this request.');
+    }
+
+    tutoring.date = new Date(date);
+    tutoring.dateRequester = requesterRole;
+
+    await tutoring.save();
+    res.redirect('/index.html');
+  } catch (err) {
+    console.error('Failed to update tutoring session date:', err);
+    res.status(500).send('Failed to update tutoring session date');
   }
 });
 

@@ -56,7 +56,6 @@ form {
 }
 
 .vertical_box {
-    order: 3;
     margin-top: -2.9rem;
     margin-left: auto;
 }
@@ -111,7 +110,7 @@ h5 {
 
 .result_link {
     width: 10rem;
-    height: 40px;
+    height: 2.5rem;
     background-color: #f8b420;
     border: none;
     border-bottom-left-radius: .25rem;
@@ -184,6 +183,10 @@ h5 {
 
 .waiting:active {
     background-color: #f8b420;
+}
+
+.small {
+    width: 4.5rem;
 }
 
 .subject_info {
