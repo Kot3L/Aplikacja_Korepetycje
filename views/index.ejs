@@ -12,21 +12,33 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <% function formatDate(date) {
-        const d = new Date(date);
-        let day = d.getDate();
-        let month = d.getMonth() + 1;
-        const year = d.getFullYear();
-   
-        if (day < 10) {
-          day = '0' + day;
+    <% 
+        function formatDate(date) {
+            const d = new Date(date);
+            let day = d.getDate();
+            let month = d.getMonth() + 1;
+            const year = d.getFullYear();
+        
+            if (day < 10) {
+              day = '0' + day;
+            }
+            if (month < 10) {
+              month = '0' + month;
+            }
+        
+            return `${day}/${month}/${year}`;
         }
-        if (month < 10) {
-          month = '0' + month;
+
+        function getTomorrow() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const year = tomorrow.getFullYear();
+            const month = ('0' + (tomorrow.getMonth() + 1)).slice(-2); // Add leading zero
+            const day = ('0' + tomorrow.getDate()).slice(-2); // Add leading zero
+            return `${year}-${month}-${day}`;
         }
-   
-        return `${day}/${month}/${year}`;
-    } %>
+    %>
     <header>
         <h1>Strona Główna</h1>
         <img src="img/logo.png" class="logo" alt="logo zsti">
@@ -91,10 +103,10 @@
                                 </form>
                                 <div class="vertical_box">
                                     <% if (userTutoring.dateRequester === 'author') { %>
-                                        <input type="date" name="date" id="date" <%= userTutoring.date ? 'value=' + userTutoring.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                        <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userTutoring.date ? 'value=' + userTutoring.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
                                         <button class="result_link waiting">OCZEKIWANIE</button>
                                     <% } else if (userTutoring.dateRequester === 'tutor') { %>
-                                        <input type="date" name="date" id="date" <%= userTutoring.date ? 'value=' + userTutoring.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                        <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userTutoring.date ? 'value=' + userTutoring.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
                                         <div class="horizontal_box">
                                             <form action="/accept-date-form" method="POST">
                                                 <input type="hidden" name="id" value="<%= userTutoring._id %>">
@@ -108,7 +120,7 @@
                                     <% } else { %>
                                         <form action="/request-date-form" method="POST">
                                             <input type="hidden" name="id" value="<%= userTutoring._id %>">
-                                            <input type="date" name="date" id="date" <%= userTutoring.date ? 'value=' + userTutoring.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                            <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userTutoring.date ? 'value=' + userTutoring.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
                                             <button class="result_link">Zaplanuj <i class="bi bi-arrow-right"></i></button>
                                         </form>
                                     <% } %>
@@ -174,10 +186,10 @@
                                 </form>
                                 <div class="vertical_box">
                                     <% if (userCourse.dateRequester === 'tutor') { %>
-                                        <input type="date" name="date" id="date" <%= userCourse.date ? 'value=' + userCourse.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                        <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userCourse.date ? 'value=' + userCourse.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
                                         <button class="result_link waiting">OCZEKIWANIE</button>
                                     <% } else if (userCourse.dateRequester === 'author') { %>
-                                        <input type="date" name="date" id="date" <%= userCourse.date ? 'value=' + userCourse.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                        <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userCourse.date ? 'value=' + userCourse.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
                                         <div class="horizontal_box">
                                             <form action="/accept-date-form" method="POST">
                                                 <input type="hidden" name="id" value="<%= userCourse._id %>">
@@ -191,7 +203,7 @@
                                     <% } else { %>
                                         <form action="/request-date-form" method="POST">
                                             <input type="hidden" name="id" value="<%= userCourse._id %>">
-                                            <input type="date" name="date" id="date" <%= userCourse.date ? 'value=' + userCourse.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                            <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userCourse.date ? 'value=' + userCourse.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
                                             <button class="result_link">Zaplanuj <i class="bi bi-arrow-right"></i></button>
                                         </form>
                                     <% } %>
