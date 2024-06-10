@@ -230,15 +230,15 @@ app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
   }
 });
 
-// Activate tutoring route
-app.post('/activate-tutoring-form', isAuthenticated, async (req, res) => {
+// Accept tutoring route
+app.post('/accept-tutoring-form', isAuthenticated, async (req, res) => {
   try {
     const tutoringId = req.body.id;
     const userId = req.session.user._id;
 
-    const tutoring = await TutoringModel.findOneAndUpdate(
-      { _id: tutoringId, status: 'pending' },
-      { status: 'active', tutor: userId },
+    const tutoring = await TutoringModel.findByIdAndUpdate(
+      tutoringId,
+      { status: 'accepted', tutor: userId },
       { new: true }
     );
 
@@ -305,28 +305,6 @@ app.post('/profile-form', isAuthenticated, upload.single('pfp'), async (req, res
   } catch (err) {
     console.error('Failed to update profile:', err);
     res.status(500).send('Failed to update profile');
-  }
-});
-
-// Accept tutoring route
-app.post('/accept-tutoring-form', isAuthenticated, async (req, res) => {
-  try {
-    const tutoringId = req.body.id;
-
-    const tutoring = await TutoringModel.findByIdAndUpdate(
-      tutoringId,
-      { status: 'accepted' },
-      { new: true }
-    );
-
-    if (tutoring) {
-      res.redirect('/index.html');
-    } else {
-      res.status(404).send('Tutoring session not found.');
-    }
-  } catch (err) {
-    console.error('Failed to update tutoring session status:', err);
-    res.status(500).send('Failed to update tutoring session status');
   }
 });
 
