@@ -77,7 +77,10 @@
                                             <input type="date" name="date" id="date" <%= userTutoring.date ? 'value=' + userTutoring.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
                                             <div class="horizontal_box">
                                                 <button class="result_link accept small"><i class="bi bi-check-lg"></i></button>
-                                                <button class="result_link deny small"><i class="bi bi-x-lg"></i></button>
+                                                <form action="/reject-date-form" method="POST">
+                                                    <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                                    <button class="result_link deny small"><i class="bi bi-x-lg"></i></button>
+                                                </form>
                                             </div>
                                         <% } else { %>
                                             <form action="/request-date-form" method="POST">
@@ -143,7 +146,10 @@
                                         <input type="date" name="date" id="date" <%= userCourse.date ? 'value=' + userCourse.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
                                         <div class="horizontal_box">
                                             <button class="result_link accept small"><i class="bi bi-check-lg"></i></button>
-                                            <button class="result_link deny small"><i class="bi bi-x-lg"></i></button>
+                                            <form action="/reject-date-form" method="POST">
+                                                <input type="hidden" name="id" value="<%= userCourse._id %>">
+                                                <button class="result_link deny small"><i class="bi bi-x-lg"></i></button>
+                                            </form>
                                         </div>
                                     <% } else { %>
                                         <form action="/request-date-form" method="POST">

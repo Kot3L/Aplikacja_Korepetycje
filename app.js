@@ -290,6 +290,27 @@ app.post('/request-date-form', isAuthenticated, async (req, res) => {
   }
 });
 
+// Reject date route
+app.post('/reject-date-form', isAuthenticated, async (req, res) => {
+  try {
+    const tutoringId = req.body.id;
+    const tutoring = await TutoringModel.findById(tutoringId);
+
+    if (!tutoring) {
+      return res.status(404).send('Tutoring session not found.');
+    }
+
+    tutoring.date = null;
+    tutoring.dateRequester = null;
+
+    await tutoring.save();
+    res.redirect('/index.html');
+  } catch (err) {
+    console.error('Failed to update tutoring session date:', err);
+    res.status(500).send('Failed to update tutoring session date');
+  }
+});
+
 // Configure Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
