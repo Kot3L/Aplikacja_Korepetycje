@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona główna</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js" defer></script>
+</head>
+<body>
+    <% 
+        function formatDate(date) {
+            const d = new Date(date);
+            let day = d.getDate();
+            let month = d.getMonth() + 1;
+            const year = d.getFullYear();
+        
+            if (day < 10) {
+              day = '0' + day;
+            }
+            if (month < 10) {
+              month = '0' + month;
+            }
+        
+            return `${day}/${month}/${year}`;
+        }
+
+        function getTomorrow() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const year = tomorrow.getFullYear();
+            const month = ('0' + (tomorrow.getMonth() + 1)).slice(-2); // Add leading zero
+            const day = ('0' + tomorrow.getDate()).slice(-2); // Add leading zero
+            return `${year}-${month}-${day}`;
+        }
+    %>
+    <header>
+        <h1>Strona Główna</h1>
+        <img src="img/logo.png" class="logo" alt="logo zsti">
+    </header>
+    <main>
+        <article>
+            <h2>Twoje Zgłoszenia (Jako uczeń)</h2>
+            <% if (userTutorings.length > 0) { %>
+                <% userTutorings.forEach(userTutoring => { %>
+                    <article class="result">
+                        <div class="horizontal_box">
+                            <img src="<%= userTutoring.author.pfpPath %>">
+                            <div class="info">
+                                <p class="username"><b><%= userTutoring.author.firstName %> <%= userTutoring.author.lastName %></b><br><%= userTutoring.author.email %></p>
+                            </div>
+                            <div class="vertical_line"></div>
+                            <% if (userTutoring.tutor) { %>
+                                <img src="<%= userTutoring.tutor.pfpPath %>">
+                                <div class="info">
+                                    <p class="username"><b><%= userTutoring.tutor.firstName %> <%= userTutoring.tutor.lastName %></b><br><%= userTutoring.tutor.email %></p>
+                                    <div class="stars_container">
+                                        <% for (let i = 1; i <= 5; i++) { %>
+                                            <% if (i <= userTutoring.tutor.rating) { %>
+                                                <i class="bi bi-star-fill"></i>
+                                            <% } else { %>
+                                                <i class="bi bi-star"></i>
+                                            <% } %>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            <% } else { %>
+                                <div class="info transparent">
+                                    <p class="username"><b>BRAK KOREPETYTORA</b><br>Oczekiwanie</p>
+                                </div>
+                            <% } %>
+                            <% if (userTutoring.status === 'scheduled' || userTutoring.status === 'completed') { %>
+                                <div class="vertical_box" style="margin-top: 0;">
+                                    <p class="username date"><b>Data: <%= formatDate(userTutoring.date) %></b></p>
+                                </div>
+                            <% } %>
+                        </div>
+                        <div class="sbj_info">
+                            <h5>Informacje</h5>
+                            <div class="subject_info">
+                                <div class="subject"><%= userTutoring.subject %></div>
+                                <div class="unit"><%= userTutoring.unit %></div>
+                                <div class="topic"><%= userTutoring.topic %></div>
+                            </div>
+                        </div>
+                        <div class="description">
+                            <h5>Opis</h5>
+                            <p><%= userTutoring.description %></p>
+                        </div>
+                        <div class="horizontal_box">
+                            <% if (userTutoring.status === 'pending') { %>
+                                <form action="/delete-tutoring-form" method="POST">
+                                    <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                    <button class="result_link delete">Usuń <i class="bi bi-trash"></i></button>
+                                </form>
+                            <% } else if (userTutoring.status === 'accepted') { %>
+                                <form action="/reject-tutoring-form" method="POST">
+                                    <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                    <button class="result_link deny">Odrzuć <i class="bi bi-x-lg"></i></button>
+                                </form>
+                                <div class="vertical_box">
+                                    <% if (userTutoring.dateRequester === 'author') { %>
+                                        <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userTutoring.date ? 'value=' + userTutoring.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                        <button class="result_link waiting">OCZEKIWANIE</button>
+                                    <% } else if (userTutoring.dateRequester === 'tutor') { %>
+                                        <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userTutoring.date ? 'value=' + userTutoring.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                        <div class="horizontal_box">
+                                            <form action="/accept-date-form" method="POST">
+                                                <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                                <button class="result_link accept small"><i class="bi bi-check-lg"></i></button>
+                                            </form>
+                                            <form action="/reject-date-form" method="POST">
+                                                <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                                <button class="result_link deny small"><i class="bi bi-x-lg"></i></button>
+                                            </form>
+                                        </div>
+                                    <% } else { %>
+                                        <form action="/request-date-form" method="POST">
+                                            <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                            <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userTutoring.date ? 'value=' + userTutoring.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                            <button class="result_link">Zaplanuj <i class="bi bi-arrow-right"></i></button>
+                                        </form>
+                                    <% } %>
+                                </div>
+                            <% } else if (userTutoring.status === 'scheduled') { %>
+                                <form action="/reject-tutoring-form" method="POST">
+                                    <input type="hidden" name="id" value="<%= userTutoring._id %>">
+                                    <button class="result_link deny">Odrzuć <i class="bi bi-x-lg"></i></button>
+                                </form>
+                            <% } else { %>
+                                <button class="result_link" id="openPopup">Oceń <i class="bi bi-star"></i></button>
+                                <div id="myPopup" class="popup">
+                                    <article class="result popup-content">
+                                        <span class="close">&times;</span>
+                                        <form action="/review-tutoring-form" method="POST">
+                                            <input type="hidden" id="tutoringId" name="tutoringId" value="<%= userTutoring._id %>">
+                                            <input type="hidden" id="tutorId" name="tutorId" value="<%= userTutoring.tutor._id %>">
+                                            <h5>Ocena</h5>
+                                            <div class="stars_container_input">
+                                                <i class="bi bi-star" data-value="1"></i>
+                                                <i class="bi bi-star" data-value="2"></i>
+                                                <i class="bi bi-star" data-value="3"></i>
+                                                <i class="bi bi-star" data-value="4"></i>
+                                                <i class="bi bi-star" data-value="5"></i>
+                                            </div>
+                                            <input type="number" name="rating" id="rating" style="display: none;" required>
+                                            <h5>Opis</h5>
+                                            <textarea name="description" id="description"></textarea>
+                                            <button class="result_link">Oceń <i class="bi bi-star"></i></button>
+                                        </form>
+                                    </article>
+                                  </div>
+                            <% } %>
+                        </div>
+                    </article>
+                <% }); %>
+            <% } else { %>
+                <p>Nie masz żadnych zgłoszeń.</p>
+            <% } %>
+        </article>
+        <article>
+            <h2>Twoje Kursy (Jako korepetytor)</h2>
+            <% if (userCourses.length > 0) { %>
+                <% userCourses.forEach(userCourse => { %>
+                    <article class="result">
+                        <div class="horizontal_box">
+                            <img src="<%= userCourse.tutor.pfpPath %>">
+                            <div class="info">
+                                <p class="username"><b><%= userCourse.tutor.firstName %> <%= userCourse.tutor.lastName %></b><br><%= userCourse.tutor.email %></p>
+                                <div class="stars_container">
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <% if (i <= userCourse.tutor.rating) { %>
+                                            <i class="bi bi-star-fill"></i>
+                                        <% } else { %>
+                                            <i class="bi bi-star"></i>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <div class="vertical_line"></div>
+                            <img src="<%= userCourse.author.pfpPath %>">
+                            <div class="info">
+                                <p class="username"><b><%= userCourse.author.firstName %> <%= userCourse.author.lastName %></b><br><%= userCourse.author.email %></p>
+                            </div>
+                            <% if (userCourse.status === 'scheduled' || userCourse.status === 'completed') { %>
+                                <div class="vertical_box" style="margin-top: 0;">
+                                    <p class="username date"><b>Data: <%= formatDate(userCourse.date) %></b></p>
+                                </div>
+                            <% } %>
+                        </div>
+                        <div class="sbj_info">
+                            <h5>Informacje</h5>
+                            <div class="subject_info">
+                                <div class="subject"><%= userCourse.subject %></div>
+                                <div class="unit"><%= userCourse.unit %></div>
+                                <div class="topic"><%= userCourse.topic %></div>
+                            </div>
+                        </div>
+                        <div class="description">
+                            <h5>Opis</h5>
+                            <p><%= userCourse.description %></p>
+                        </div>
+                        <div class="horizontal_box">
+                            <% if (userCourse.status === 'accepted') { %>
+                                <form action="/reject-tutoring-form" method="POST">
+                                    <input type="hidden" name="id" value="<%= userCourse._id %>">
+                                    <button class="result_link deny">Odrzuć <i class="bi bi-x-lg"></i></button>
+                                </form>
+                                <div class="vertical_box">
+                                    <% if (userCourse.dateRequester === 'tutor') { %>
+                                        <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userCourse.date ? 'value=' + userCourse.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                        <button class="result_link waiting">OCZEKIWANIE</button>
+                                    <% } else if (userCourse.dateRequester === 'author') { %>
+                                        <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userCourse.date ? 'value=' + userCourse.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                        <div class="horizontal_box">
+                                            <form action="/accept-date-form" method="POST">
+                                                <input type="hidden" name="id" value="<%= userCourse._id %>">
+                                                <button class="result_link accept small"><i class="bi bi-check-lg"></i></button>
+                                            </form>
+                                            <form action="/reject-date-form" method="POST">
+                                                <input type="hidden" name="id" value="<%= userCourse._id %>">
+                                                <button class="result_link deny small"><i class="bi bi-x-lg"></i></button>
+                                            </form>
+                                        </div>
+                                    <% } else { %>
+                                        <form action="/request-date-form" method="POST">
+                                            <input type="hidden" name="id" value="<%= userCourse._id %>">
+                                            <input type="date" name="date" id="date" min="<%= getTomorrow() %>" <%= userCourse.date ? 'value=' + userCourse.date.toISOString().substring(0, 10) + ' disabled' : 'required' %>><br>
+                                            <button class="result_link">Zaplanuj <i class="bi bi-arrow-right"></i></button>
+                                        </form>
+                                    <% } %>
+                                </div>
+                            <% } else { %>
+                                <form action="/reject-tutoring-form" method="POST">
+                                    <input type="hidden" name="id" value="<%= userCourse._id %>">
+                                    <button class="result_link deny">Odrzuć <i class="bi bi-x-lg"></i></button>
+                                </form>
+                            <% } %>
+                        </div>
+                    </article>
+                <% }); %>
+            <% } else { %>
+                <p>Nie masz żadnych kursów.</p>
+            <% } %>
+        </article>
+    </main>
+    <footer>
+        <div class="icon-container">
+            <a href="profil.html"><i class="bi bi-person-circle"></i></a>
+            <a href="index.html"><i class="bi bi-house active"></i></a>
+            <a href="dodaj_zgloszenie.html"><i class="bi bi-person-plus"></i></a>
+            <a href="zgloszenia.html"><i class="bi bi-people"></i></a>
+        </div>
+    </footer>
+</body>
+</html>

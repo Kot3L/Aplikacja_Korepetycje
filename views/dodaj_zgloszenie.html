@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodaj Zgłoszenie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="zgloszenia.css">
+</head>
+<body>
+    <header>
+        <h1 id="add_h1">Dodaj Zgłoszenie</h1>
+        <img src="img/logo.png" class="logo" alt="logo zsti">
+    </header>
+    <main>
+        <form action="/add-tutoring-form" method="POST">
+            <label for="subject">Dodaj</label>
+            <select name="subject" id="subject" required>
+                <option value=""></option>
+                <optgroup label="Przedmioty zawodowe">
+                    <option value="Projektowanie i administrowanie bazami danych">Projektowanie i administrowanie bazami danych</option>
+                    <option value="Projektowanie oprogramowania">Projektowanie oprogramowania</option>
+                    <option value="Projektowanie stron internetowych">Projektowanie stron internetowych</option>
+                    <option value="Programowanie aplikacji internetowych">Programowanie aplikacji internetowych</option>
+                    <option value="Projektowanie obiektowe">Projektowanie obiektowe</option>
+                    <option value="Bezpieczeństwo i higiena pracy">Bezpieczeństwo i higiena pracy</option>
+                    <option value="Podstawy elektrotechniki i elektroniki">Podstawy elektrotechniki i elektroniki</option>
+                    <option value="Maszyny i urządzenia elektryczne">Maszyny i urządzenia elektryczne</option>
+                    <option value="Instalacje elektryczne">Instalacje elektryczne</option>
+                    <option value="Montaż i konserwacja instalacji elektrycznych">Montaż i konserwacja instalacji elektrycznych</option>
+                    <option value="Montaż i konserwacja maszyn i urządzeń elektrycznych">Montaż i konserwacja maszyn i urządzeń elektrycznych</option>
+                    <option value="Podstawy informatyki">Podstawy informatyki</option>
+                    <option value="Język obcy zawodowy">Język obcy zawodowy</option>
+                    <option value="Przygotowanie stanowiska komputerowego do pracy">Przygotowanie stanowiska komputerowego do pracy</option>
+                    <option value="Eksploatacja urządzeń peryferyjnych">Eksploatacja urządzeń peryferyjnych</option>
+                    <option value="Naprawa urządzeń techniki komputerowej">Naprawa urządzeń techniki komputerowej</option>
+                    <option value="Montaż i eksplantacja lokalnej sieci komputerowej">Montaż i eksplantacja lokalnej sieci komputerowej</option>
+                </optgroup>
+                <optgroup label="Przedmioty ogólnokształcące">
+                    <option value="Język polski">Język polski</option>
+                    <option value="Język angielski">Język angielski</option>
+                    <option value="Język niemiecki">Język niemiecki</option>
+                    <option value="Historia">Historia</option>
+                    <option value="Wiedza o społeczeństwie">Wiedza o społeczeństwie</option>
+                    <option value="Matematyka">Matematyka</option>
+                    <option value="Fizyka">Fizyka</option>
+                    <option value="Chemia">Chemia</option>
+                    <option value="Biologia">Biologia</option>
+                    <option value="Geografia">Geografia</option>
+                    <option value="Informatyka">Informatyka</option>
+                    <option value="Edukacja dla bezpieczeństwa">Edukacja dla bezpieczeństwa</option>
+                    <option value="Podstawy przedsiębiorczośc">Podstawy przedsiębiorczości</option>
+                    <option value="Historia i teraźniejszość">Historia i teraźniejszość</option>
+                    <option value="Biznes i zarządzanie">Biznes i zarządzanie</option>
+                </optgroup>
+            </select>
+            <input type="text" name="unit" id="unit" placeholder="Dział" required>
+            <input type="text" name="topic" id="topic" placeholder="Temat" required>
+            <textarea name="description" id="description" placeholder="Opis"></textarea>
+            <input type="submit" id="submit" value="DODAJ">
+        </form>
+    </main>
+    <footer>
+        <div class="icon-container">
+            <a href="profil.html"><i class="bi bi-person-circle"></i></a>
+            <a href="index.html"><i class="bi bi-house"></i></a>
+            <a href="dodaj_zgloszenie.html"><i class="bi bi-person-plus active"></i></a>
+            <a href="zgloszenia.html"><i class="bi bi-people"></i></a>
+        </div>
+    </footer>
+</body>
+</html>

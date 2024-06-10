@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+    <header>
+        <h1>Logowanie</h1>
+    </header>
+    <main>
+        <div class="welcome_text">
+            <h2>Witaj!</h2>
+            <p>Zaloguj się, aby kontynuować.</p>
+        </div>
+        <div class="login">
+            <form action="/login-form" method="POST">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" required>
+                <label for="password" class="password">Hasło</label>
+                <input type="password" name="password" id="password" required>
+                <input type="submit" class="submit" value="ZALOGUJ">
+                <p>Jesteś nowy? <a href="register.html">Zarejestruj sie</a></p>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

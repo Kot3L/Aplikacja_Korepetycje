@@ -1,0 +1,68 @@
+main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10vh;
+}
+
+/* Form */
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form * {
+    margin: .5rem;
+}
+
+input, textarea {
+    background-color: #D4D4D8;
+    color: white;
+    border: none;
+    height: 7vh;
+    width: 20rem;
+    padding: .5rem;
+    border-radius: 2px;
+    resize: none;
+}
+
+select {
+    background-color: #D4D4D8;
+    color: white;
+    border: none;
+    height: 7vh;
+    width: 21rem;
+    padding: .5rem;
+    border-radius: 2px;
+}
+
+::placeholder {
+    color: white;
+    font-size: 1rem;
+}
+
+#submit {
+    background-color: #F9B521;
+    align-self: center;
+    width: 70%;
+    border-radius: 5px;
+}
+
+/* Responsywnosc */
+
+@media(max-width: 376px) {
+    form * {
+        width: 90%;
+    }
+
+    .logo {
+        display: none;
+    }
+}
+
+@media(max-width: 769px) {
+    :root {
+        font-size: 10px;
+    }
+}
