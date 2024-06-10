@@ -69,11 +69,6 @@ main{
         display: none;
     }
 
-    .back {
-        display: inline-block;
-        padding-right: 2rem;
-    }
-
     .opinia {
         padding: 0;
     }

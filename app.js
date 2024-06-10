@@ -457,12 +457,12 @@ app.get('/login.html', checkAuthRequired, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
-app.get('/zgloszenia.html', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'zgloszenia.html'));
+app.get('/profil.html', isAuthenticated, (req, res) => {
+  res.render('profil', { user: req.session.user });
 });
 
-app.get('/dodaj_zgloszenie.html', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'dodaj_zgloszenie.html'));
+app.get('/opinie.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'opinie.html'));
 });
 
 app.get('/index.html', isAuthenticated, async (req, res) => {
@@ -477,12 +477,12 @@ app.get('/index.html', isAuthenticated, async (req, res) => {
   }
 });
 
-app.get('/kalendarz.html', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'kalendarz.html'));
+app.get('/dodaj_zgloszenie.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'dodaj_zgloszenie.html'));
 });
 
-app.get('/profil.html', isAuthenticated, (req, res) => {
-  res.render('profil', { user: req.session.user });
+app.get('/zgloszenia.html', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'zgloszenia.html'));
 });
 
 // Server responses section
