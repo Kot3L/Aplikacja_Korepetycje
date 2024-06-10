@@ -85,9 +85,13 @@ form {
     font-weight: bolder;
 }
 
-.stars_container i {
+.stars_container i, .stars_container_input i {
     font-size: 1.5rem;
     color: rgb(255, 166, 0);
+}
+
+.stars_container_input {
+    cursor: pointer;
 }
 
 .description {
@@ -215,6 +219,44 @@ h5 {
     padding: 0.5rem;
     border-radius: 30px;
     background-color: #a2a5f8;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    z-index: 9;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+
+.popup-content {
+  margin: 5% auto;
+  width: 30%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  margin-left: auto;
+}
+
+.close:hover, .close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+textarea {
+    resize: none;
+    height: 10rem;
 }
 
 @media(max-width: 768px) {

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="index.css">
+    <script src="index.js" defer></script>
 </head>
 <body>
     <% 
@@ -72,7 +73,7 @@
                                     <p class="username"><b>BRAK KOREPETYTORA</b><br>Oczekiwanie</p>
                                 </div>
                             <% } %>
-                            <% if (userTutoring.status === 'scheduled') { %>
+                            <% if (userTutoring.status === 'scheduled' || userTutoring.status === 'completed') { %>
                                 <div class="vertical_box" style="margin-top: 0;">
                                     <p class="username date"><b>Data: <%= formatDate(userTutoring.date) %></b></p>
                                 </div>
@@ -125,11 +126,34 @@
                                         </form>
                                     <% } %>
                                 </div>
-                            <% } else { %>
+                            <% } else if (userTutoring.status === 'scheduled') { %>
                                 <form action="/reject-tutoring-form" method="POST">
                                     <input type="hidden" name="id" value="<%= userTutoring._id %>">
                                     <button class="result_link deny">Odrzuć <i class="bi bi-x-lg"></i></button>
                                 </form>
+                            <% } else { %>
+                                <button class="result_link" id="openPopup">Oceń <i class="bi bi-star"></i></button>
+                                <div id="myPopup" class="popup">
+                                    <article class="result popup-content">
+                                        <span class="close">&times;</span>
+                                        <form action="/review-tutoring-form" method="POST">
+                                            <input type="hidden" id="tutoringId" name="tutoringId" value="<%= userTutoring._id %>">
+                                            <input type="hidden" id="tutorId" name="tutorId" value="<%= userTutoring.tutor._id %>">
+                                            <h5>Ocena</h5>
+                                            <div class="stars_container_input">
+                                                <i class="bi bi-star" data-value="1"></i>
+                                                <i class="bi bi-star" data-value="2"></i>
+                                                <i class="bi bi-star" data-value="3"></i>
+                                                <i class="bi bi-star" data-value="4"></i>
+                                                <i class="bi bi-star" data-value="5"></i>
+                                            </div>
+                                            <input type="number" name="rating" id="rating" style="display: none;" required>
+                                            <h5>Opis</h5>
+                                            <textarea name="description" id="description"></textarea>
+                                            <button class="result_link">Oceń <i class="bi bi-star"></i></button>
+                                        </form>
+                                    </article>
+                                  </div>
                             <% } %>
                         </div>
                     </article>
@@ -160,7 +184,7 @@
                             <div class="info">
                                 <p class="username"><b><%= userCourse.author.firstName %> <%= userCourse.author.lastName %></b><br><%= userCourse.author.email %></p>
                             </div>
-                            <% if (userCourse.status === 'scheduled') { %>
+                            <% if (userCourse.status === 'scheduled' || userCourse.status === 'completed') { %>
                                 <div class="vertical_box" style="margin-top: 0;">
                                     <p class="username date"><b>Data: <%= formatDate(userCourse.date) %></b></p>
                                 </div>

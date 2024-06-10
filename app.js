@@ -9,6 +9,7 @@ const routes = require('./routes/index');
 const bcrypt = require('bcrypt');
 const Fuse = require('fuse.js');
 const multer = require('multer');
+const cron = require('node-cron');
 const fs = require('fs');
 const port = 3000;
 
@@ -80,6 +81,35 @@ const TutoringSchema = new mongoose.Schema({
   dateRequester: String
 });
 const TutoringModel = mongoose.model('Tutoring', TutoringSchema);
+
+const ReviewSchema = new mongoose.Schema({
+  author: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  rating: Number,
+  description: String,
+  tutor: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User',
+    required: false
+  }
+});
+const ReviewModel = mongoose.model('Review', ReviewSchema);
+
+// Scheduled task to update tutoring statuses
+cron.schedule('0 0 * * *', async () => {
+  try {
+    const now = new Date();
+    const result = await TutoringModel.updateMany(
+      { date: { $lt: now }, status: 'scheduled' },
+      { status: 'completed' }
+    );
+  } catch (err) {
+    console.error('Failed to update tutoring sessions:', err);
+  }
+});
 
 // Register route
 app.post('/register-form', async (req, res) => {
@@ -334,6 +364,28 @@ app.post('/reject-date-form', isAuthenticated, async (req, res) => {
   }
 });
 
+// Review tutoring route
+app.post('/review-tutoring-form', isAuthenticated, async (req, res) => {
+  try {
+    const { rating, description, tutoringId, tutorId } = req.body;
+    const userId = req.session.user._id;
+
+    const reviewData = new ReviewModel({
+      author: userId,
+      rating: parseInt(rating, 10),
+      description: description || 'Brak',
+      tutor: tutorId
+    });
+
+    await reviewData.save();
+    await TutoringModel.findByIdAndDelete(tutoringId);
+    res.redirect('/index.html');
+  } catch (err) {
+    console.error('Failed to save review data:', err);
+    res.status(500).send('Failed to save review data');
+  }
+});
+
 // Configure Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -469,7 +521,7 @@ app.get('/index.html', isAuthenticated, async (req, res) => {
   try {
     const userId = req.session.user._id;
     const userTutorings = await TutoringModel.find({ author: userId }).populate('author').populate('tutor');
-    const userCourses = await TutoringModel.find({ tutor: userId }).populate('author').populate('tutor');
+    const userCourses = await TutoringModel.find({ tutor: userId, status: { $ne: 'completed' } }).populate('author').populate('tutor');
     res.render('index', { userTutorings, userCourses });
   } catch (err) {
     console.error('Failed to retrieve user-specific tutorings and courses:', err);
