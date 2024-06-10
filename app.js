@@ -290,6 +290,29 @@ app.post('/request-date-form', isAuthenticated, async (req, res) => {
   }
 });
 
+// Accept date route
+app.post('/accept-date-form', isAuthenticated, async (req, res) => {
+  try {
+    const tutoringId = req.body.id;
+
+    const tutoring = await TutoringModel.findByIdAndUpdate(
+      tutoringId,
+      { status: 'scheduled' },
+      { new: true }
+    );
+
+    if (!tutoring) {
+      return res.status(404).send('Tutoring session not found.');
+    }
+
+    await tutoring.save();
+    res.redirect('/index.html');
+  } catch (err) {
+    console.error('Failed to update tutoring session date:', err);
+    res.status(500).send('Failed to update tutoring session date');
+  }
+});
+
 // Reject date route
 app.post('/reject-date-form', isAuthenticated, async (req, res) => {
   try {
@@ -373,7 +396,7 @@ app.post('/reject-tutoring-form', isAuthenticated, async (req, res) => {
 
     const tutoring = await TutoringModel.findByIdAndUpdate(
       tutoringId,
-      { status: 'pending', tutor: null },
+      { status: 'pending', tutor: null, date: null, dateRequester: null },
       { new: true }
     );
 

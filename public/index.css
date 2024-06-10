@@ -66,6 +66,13 @@ form {
     margin-bottom: .5rem;
 }
 
+.date {
+    background-color: rgb(50, 175, 50);
+    color:white;
+    padding: .5rem;
+    border-radius: .5rem;
+}
+
 .info {
     display: flex;
     flex-direction: column;
@@ -129,7 +136,7 @@ h5 {
 }
 
 .accept {
-    color:#E4E4E7;
+    color: white;
     background-color: rgb(50, 175, 50);
     border-bottom: .5rem rgb(25, 150, 25) solid;
 }
@@ -144,7 +151,7 @@ h5 {
 }
 
 .deny {
-    color:#E4E4E7;
+    color: white;
     background-color: rgb(175, 50, 50);
     border-bottom: .5rem rgb(150, 25, 25) solid;
 }
@@ -159,7 +166,7 @@ h5 {
 }
 
 .delete {
-    color:#E4E4E7;
+    color: white;
     background-color: rgb(50, 50, 50);
     border-bottom: .5rem rgb(25, 25, 25) solid;
 }
