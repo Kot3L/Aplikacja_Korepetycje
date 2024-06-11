@@ -8,6 +8,9 @@ const cnctionString = require('./cnctionString.js');
 const routes = require('./routes/index');
 const bcrypt = require('bcrypt');
 const Fuse = require('fuse.js');
+const nodemailer = require('nodemailer');
+const ePass = require('./mstrEmail.js');
+const User = require('./models/User');
 const multer = require('multer');
 const cron = require('node-cron');
 const fs = require('fs');
@@ -46,21 +49,22 @@ app.use('/', routes);
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect(cnctionString, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000, // Adjust the timeout here
+  socketTimeoutMS: 45000 // Adjust the socket timeout here
 }).catch((err) => {
   console.error('Failed to connect to MongoDB', err);
 });
 
 // Define a schema and model
-const UserSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  email: String,
-  password: String,
-  pfpPath: String,
-  rating: Number
-});
-const UserModel = mongoose.model('User', UserSchema);
+// const UserSchema = new mongoose.Schema({
+//   firstName: String,
+//   lastName: String,
+//   email: String,
+//   password: String,
+//   pfpPath: String,
+//   rating: Number
+// });
 
 const TutoringSchema = new mongoose.Schema({
   author: {
@@ -112,53 +116,148 @@ cron.schedule('* * * * *', async () => {
   }
 });
 
-// Register route
-app.post('/register-form', async (req, res) => {
-  try {
-    const existingData = await UserModel.findOne({ email: req.body.email });
-    if (existingData) {
-      return res.status(400).send('Data with this email already exists.');
-    } else {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      const userData = new UserModel({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        password: hashedPassword,
-        pfpPath: 'img/pfp/default.png',
-        rating: 0
-      });
-      await userData.save();
-      return res.redirect('/login.html');
-    }
-  } catch (err) {
-    console.error('Failed to save form data:', err);
-    return res.status(500).send('Failed to save form data');
+// Configure Nodemailer
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+      user: 'zstikorepetycje@gmail.com',
+      pass: ePass // Replace with your actual password or use environment variables
   }
 });
 
-// Login route
-app.post('/login-form', async (req, res) => {
-  const { email, password } = req.body;
+// Route for registration form submission
+app.post('/register-form', async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email });
-    if (user) {
-      const match = await bcrypt.compare(req.body.password, user.password);
-      if (match) {
-        req.session.user = {
-          ...user.toObject(),
-          unhashedPassword: password
-        };
-        return res.redirect('/index.html');
-      } else {
-        req.session.nrOfTries = (req.session.nrOfTries || 0) + 1;
-        if (req.session.nrOfTries == 4) {
-          req.session.isAuthenticated = true;
+    const { firstName, lastName, email, password } = req.body; 
+
+        // Check if the email is already registered
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
           return res.send(`
             <html>
             <head>
               <script>
-                alert("To na pewno ty?");
+                alert("Podany email jest juz zarejestrowany");
+                window.location.href = '/register.html';
+              </script>
+            </head>
+            <body></body>
+            </html>
+          `);;
+        }
+
+        if(password.length < 6){
+          return res.send(`
+            <html>
+            <head>
+              <script>
+                alert("Podane haslo musi miec co najmniej 6 znakow!");
+                window.location.href = '/register.html';
+              </script>
+            </head>
+            <body></body>
+            </html>
+          `);;
+        }
+    // Generate a 6-digit random code
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString(); 
+
+    // Save the code and user info in session
+    req.session.verificationCode = verificationCode; 
+    req.session.userData = { firstName, lastName, email, password }; 
+    req.session.verificationCodeExpires = Date.now() + 120000; // Set expiration time for 2 minutes
+
+    // Send verification email
+    const mailOptions = {
+      from: 'zstikorepetycje@gmail.com',
+      to: email,
+      subject: 'Verification Code',
+      text: `Your verification code is: ${verificationCode}` 
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => { 
+      if (error) {
+        console.error('Error sending email:', error); // Log the error details 
+        return res.status(500).send('Error sending email');
+      }
+      // Redirect to verification page
+      res.redirect('/weryfikacja.html'); 
+    });
+  } catch (err) {
+    console.error('Error in /register route:', err);
+    res.status(500).send('Something went wrong!');
+  }
+});
+
+// Route to display verification form
+app.get('/weryfikacja.html', (req, res) => { 
+  try {
+    res.sendFile(path.join(__dirname, 'views', 'weryfikacja.html')); // Correct path to weryfikacja.html 
+  } catch (err) {
+    console.error('Error in /weryfikacja.html route:', err);
+    res.status(500).send('Something went wrong!');
+  }
+});
+
+// Route for verification form submission
+app.post('/weryfikacja', async (req, res) => {
+  try {
+    const { code } = req.body;
+    const { verificationCode, userData, verificationCodeExpires } = req.session;
+
+    if (!verificationCode || !userData) {
+      return res.status(400).send('Session data missing. Please try registering again.');
+    }
+
+    if (Date.now() > verificationCodeExpires) {
+      return res.status(400).send('Verification code expired');
+    }
+
+    if (code === verificationCode) {
+      // Save user to the database
+      const newUser = new User(userData); // Correct usage of User model 
+      await newUser.save();
+
+      // Clear session data
+      req.session.destroy((err) => {
+        if (err) {
+          console.error('Error destroying session:', err); 
+        }
+      });
+
+      // Redirect to login page
+      res.redirect('/login.html'); 
+    } else {
+      res.status(400).send('Invalid verification code');
+    }
+  } catch (err) {
+    console.error('Error in /weryfikacja route:', err);
+    res.status(500).send('Something went wrong!');
+  }
+});
+
+// Login route
+app.post('/login-form', async (req, res) => { 
+  const { email, password } = req.body; 
+  try {
+    const user = await User.findOne({ email }); 
+    if (user) {
+      const match = await bcrypt.compare(password, user.password); 
+      if (match) {
+        req.session.user = { 
+          ...user.toObject(),
+          unhashedPassword: password 
+        };
+        return res.redirect('/index.html'); 
+      } else {
+        req.session.nrOfTries = (req.session.nrOfTries || 0) + 1; 
+        if (req.session.nrOfTries == 4) { 
+          req.session.isAuthenticated = true; 
+          return res.send(`
+            <html>
+            <head>
+              <script>
+                alert("To na pewno ty?, zamknij przegladarke i otworz na nowo aby miec dostep do logowania");
                 window.location.href = '/register.html';
               </script>
             </head>
@@ -166,7 +265,7 @@ app.post('/login-form', async (req, res) => {
             </html>
           `);
         }
-        return res.send(`
+        return res.send(` 
           <html>
           <head>
             <script>
@@ -191,7 +290,8 @@ app.post('/login-form', async (req, res) => {
       </html>`);
     }
   } catch (err) {
-    return res.status(500).send('Server error');
+    console.error('Error in /login-form route:', err); 
+    return res.status(500).send('Server error'); 
   }
 });
 
@@ -408,49 +508,51 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Profile route
-app.post('/profile-form', isAuthenticated, upload.single('pfp'), async (req, res) => {
+
+// Profile update route
+app.post('/profile-form', isAuthenticated, upload.single('pfp'), async (req, res) => { 
   try {
-    const userId = req.session.user._id;
-    const { firstName, lastName, email, password } = req.body;
+    const userId = req.session.user._id; 
+    const { firstName, lastName, email, password } = req.body; 
 
-    const user = await UserModel.findById(userId);
+    const user = await User.findById(userId); 
 
-    if (firstName) user.firstName = firstName;
-    if (lastName) user.lastName = lastName;
-    if (email) user.email = email;
+    if (firstName) user.firstName = firstName; 
+    if (lastName) user.lastName = lastName; 
+    if (email) user.email = email; 
 
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      user.password = hashedPassword;
+    if (password) { 
+      const hashedPassword = await bcrypt.hash(password, 10); 
+      user.password = hashedPassword; 
     }
 
-    if (req.file) {
-      if (user.pfpPath && user.pfpPath !== 'img/pfp/default.png') {
-        const oldPfpPath = path.join(__dirname, 'public', user.pfpPath);
-        fs.unlink(oldPfpPath, (err) => {
-          if (err) {
-            console.error('Failed to delete old profile picture:', err);
+    if (req.file) { 
+      if (user.pfpPath && user.pfpPath !== 'img/pfp/default.png') { 
+        const oldPfpPath = path.join(__dirname, 'public', user.pfpPath); 
+        fs.unlink(oldPfpPath, (err) => { 
+          if (err) { 
+            console.error('Failed to delete old profile picture:', err); 
           }
         });
       }
 
-      user.pfpPath = 'img/pfp/' + req.file.filename;
+      user.pfpPath = 'img/pfp/' + req.file.filename; 
     }
 
-    await user.save();
+    await user.save(); 
 
-    req.session.user = {
+    req.session.user = { 
       ...user.toObject(),
-      unhashedPassword: password || req.session.user.unhashedPassword
+      unhashedPassword: password || req.session.user.unhashedPassword 
     };
 
-    res.redirect('/profil.html');
+    res.redirect('/profil.html'); 
   } catch (err) {
-    console.error('Failed to update profile:', err);
-    res.status(500).send('Failed to update profile');
+    console.error('Failed to update profile:', err); 
+    res.status(500).send('Failed to update profile'); 
   }
 });
+
 
 // Reject tutoring route
 app.post('/reject-tutoring-form', isAuthenticated, async (req, res) => {
@@ -520,15 +622,19 @@ app.get('/login.html', checkAuthRequired, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
-app.get('/profil.html', isAuthenticated, async (req, res) => {
+// Profile route
+app.get('/profil.html', isAuthenticated, async (req, res) => { 
   try {
-    const userId = req.session.user._id;
-    const user = await UserModel.findById(userId);
+    const userId = req.session.user._id; 
+    const user = await User.findById(userId); 
+    if (!user) { 
+      throw new Error('User not found'); 
+    }
 
-    res.render('profil', { user, unhashedPassword: req.session.user.unhashedPassword });
+    res.render('profil', { user, unhashedPassword: req.session.user.unhashedPassword }); 
   } catch (err) {
-    console.error('Failed to retrieve profile data:', err);
-    res.status(500).send('Failed to retrieve profile data');
+    console.error('Failed to retrieve profile data:', err); 
+    res.status(500).send('Failed to retrieve profile data'); 
   }
 });
 
