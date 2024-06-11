@@ -104,7 +104,7 @@ const ReviewSchema = new mongoose.Schema({
 const ReviewModel = mongoose.model('Review', ReviewSchema);
 
 // Scheduled task to update tutoring statuses
-cron.schedule('* * * * *', async () => {
+cron.schedule('0 0 * * *', async () => {
   try {
     const now = new Date();
     await TutoringModel.updateMany(
