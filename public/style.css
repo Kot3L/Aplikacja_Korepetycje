@@ -65,3 +65,9 @@ a:hover {
 .active {
     color: #F9B521;
 }
+
+@media(max-width: 769px) {
+    :root {
+        font-size: 10px;
+    }
+}

@@ -60,9 +60,3 @@ select {
         display: none;
     }
 }
-
-@media(max-width: 769px) {
-    :root {
-        font-size: 10px;
-    }
-}
