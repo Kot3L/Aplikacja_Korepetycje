@@ -236,6 +236,114 @@ app.post('/weryfikacja', async (req, res) => {
   }
 });
 
+// Route for password reset initiation
+app.post('/zapomnialem-hasla', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Check if the email exists in the database
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).send('Email not found');
+    }
+
+    // Generate a verification code
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    req.session.verificationCode = verificationCode;
+    req.session.verificationCodeExpires = Date.now() + 120000; // Set expiration time for 2 minutes
+    req.session.email = email; // Save email in session
+
+    // Send verification email
+    const mailOptions = {
+      from: 'zstikorepetycje@gmail.com',
+      to: email,
+      subject: 'Verification Code for Password Reset',
+      text: `Your verification code is: ${verificationCode}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        return res.status(500).send('Error sending email');
+      }
+      // Redirect to password verification page
+      res.redirect('/weryfikacjahasla.html');
+    });
+  } catch (err) {
+    console.error('Error in /zapomnialem-hasla route:', err);
+    res.status(500).send('Something went wrong!');
+  }
+});
+
+app.get('/weryfikacjahasla.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'weryfikacjahasla.html'));
+});
+
+
+// Route for password reset verification form submission
+app.post('/weryfikacjahasla', async (req, res) => {
+  try {
+    const { code } = req.body;
+    const { verificationCode, verificationCodeExpires } = req.session;
+
+    if (!verificationCode) {
+      return res.status(400).send('Verification code missing. Please try again.');
+    }
+
+    if (Date.now() > verificationCodeExpires) {
+      return res.status(400).send('Verification code expired');
+    }
+
+    if (code === verificationCode) {
+      // Redirect to password change page
+      res.redirect('/zmianahasla.html');
+    } else {
+      res.status(400).send('Invalid verification code');
+    }
+  } catch (err) {
+    console.error('Error in /weryfikacjahasla route:', err);
+    res.status(500).send('Something went wrong!');
+  }
+});
+
+app.get('/zmianahasla.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'zmianahasla.html'));
+});
+
+// Route for password change form submission
+app.post('/zmiana-hasla', async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+    const { email } = req.session;
+
+    if (!email) {
+      return res.status(400).send('Email missing from session. Please try again.');
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).send('Password must be at least 6 characters long');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password in the database
+    await User.findOneAndUpdate({ email }, { password: hashedPassword });
+
+    // Clear session data
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Error destroying session:', err);
+      }
+    });
+
+    // Redirect to login page
+    res.redirect('/login.html');
+  } catch (err) {
+    console.error('Error in /zmiana-hasla route:', err);
+    res.status(500).send('Something went wrong!');
+  }
+});
+
 // Login route
 app.post('/login-form', async (req, res) => { 
   const { email, password } = req.body; 
@@ -252,18 +360,28 @@ app.post('/login-form', async (req, res) => {
       } else {
         req.session.nrOfTries = (req.session.nrOfTries || 0) + 1; 
         if (req.session.nrOfTries == 4) { 
-          req.session.isAuthenticated = true; 
-          return res.send(`
-            <html>
-            <head>
-              <script>
-                alert("To na pewno ty?, zamknij przegladarke i otworz na nowo aby miec dostep do logowania");
-                window.location.href = '/register.html';
-              </script>
-            </head>
-            <body></body>
-            </html>
-          `);
+          // Generate a verification code
+          const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+          req.session.verificationCode = verificationCode;
+          req.session.verificationCodeExpires = Date.now() + 120000; // Set expiration time for 2 minutes
+          req.session.email = email; // Save email in session
+
+          // Send verification email
+          const mailOptions = {
+            from: 'zstikorepetycje@gmail.com',
+            to: email,
+            subject: 'Verification Code for Password Reset',
+            text: `Your verification code is: ${verificationCode}`
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error sending email:', error);
+              return res.status(500).send('Error sending email');
+            }
+            // Redirect to password verification page
+            res.redirect('/weryfikacjahasla.html');
+          });
         }
         return res.send(` 
           <html>

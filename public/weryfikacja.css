@@ -65,7 +65,7 @@ input {
     border-radius: 5px;
     height: 6vh;
     border: none;
-    font-size: 2rem;
+    font-size: 2vmax;
     margin-top: 3rem;
     width: 15vw;
 }
