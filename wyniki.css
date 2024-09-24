@@ -108,3 +108,8 @@ h5 {
     border-radius: 30px;
     background-color: #a2a5f8;
 }
+
+.stars_container i, .stars_container_input i {
+    font-size: 1.5rem;
+    color: rgb(255, 166, 0);
+}

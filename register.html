@@ -19,17 +19,17 @@
             <p>Zarejestruj się i dołącz do naszej społeczności!</p>
         </div>
         <div class="login">
-            <form action="index.html">
+            <form action="/register-form" method="POST">
                 <label for="firstName">Imię</label>
-                <input type="text" name="firstName" id="firstName">
+                <input type="text" name="firstName" id="firstName" required>
                 <label for="lastName">Nazwisko</label>
-                <input type="text" name="lastName" id="lastName">
+                <input type="text" name="lastName" id="lastName" required>
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email">
-                <label for="password" class="password">Hasło</label>
-                <input type="password" name="password" id="password">
+                <input type="email" name="email" id="email" required>
+                <label for="password" class="password" >Hasło</label>
+                <input type="password" name="password" id="password" placeholder="musi zawierać minimum 6 znaków!" required>
                 <label for="repassword" class="repassword">Powtórz hasło</label>
-                <input type="password" name="repassword" id="repassword">
+                <input type="password" name="repassword" id="repassword" required>
                 <input type="submit" class="submit" value="ZAREJESTRUJ">
                 <p>Masz już konto? <a href="login.html">Zaloguj sie</a></p>
             </form>
