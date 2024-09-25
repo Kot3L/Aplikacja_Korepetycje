@@ -7,7 +7,7 @@ main {
 article {
     background-color: #E4E4E7;
     flex-basis: 43%;
-    height: 60vh;
+    height: auto;
     border-radius: 1rem;
     padding: 1rem;
     box-shadow: 15px 15px 20px -10px rgba(66, 68, 90, 0.5);

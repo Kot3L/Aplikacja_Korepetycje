@@ -18,7 +18,7 @@ form * {
 
 input, textarea {
     background-color: #D4D4D8;
-    color: white;
+    color: rgb(0, 0, 0);
     border: none;
     height: 7vh;
     width: 20rem;
@@ -29,7 +29,7 @@ input, textarea {
 
 select {
     background-color: #D4D4D8;
-    color: white;
+    color: rgb(0, 0, 0);
     border: none;
     height: 7vh;
     width: 21rem;
