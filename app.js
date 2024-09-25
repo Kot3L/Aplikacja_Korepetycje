@@ -57,15 +57,6 @@ mongoose.connect(cnctionString, {
   console.error('Failed to connect to MongoDB', err);
 });
 
-// Define a schema and model
-// const UserSchema = new mongoose.Schema({
-//   firstName: String,
-//   lastName: String,
-//   email: String,
-//   password: String,
-//   pfpPath: String,
-//   rating: Number
-// });
 
 const TutoringSchema = new mongoose.Schema({
   author: {
@@ -126,6 +117,15 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+function checkUpperCase(str){
+  return /[A-Z]/.test(str);
+}
+
+
+function checkSpecialCharacters(str){
+  return  /[^\w\s]/.test(str)
+}
+
 // Route for registration form submission
 app.post('/register-form', async (req, res) => {
   try {
@@ -147,12 +147,38 @@ app.post('/register-form', async (req, res) => {
           `);;
         }
 
-        if(password.length < 6){
+        if(password.length < 8){
           return res.send(`
             <html>
             <head>
               <script>
-                alert("Podane haslo musi miec co najmniej 6 znakow!");
+                alert("Podane haslo musi miec co najmniej 8 znakow!");
+                window.location.href = '/register.html';
+              </script>
+            </head>
+            <body></body>
+            </html>
+          `);;
+        }
+        if(!checkUpperCase(password)){
+          return res.send(`
+            <html>
+            <head>
+              <script>
+                alert("Podane haslo musi miec co najmniej jedną wielką literę!");
+                window.location.href = '/register.html';
+              </script>
+            </head>
+            <body></body>
+            </html>
+          `);;
+        }
+        if(!checkSpecialCharacters(password)){
+          return res.send(`
+            <html>
+            <head>
+              <script>
+                alert("Podane haslo musi miec co najmniej jeden znak specjalny!");
                 window.location.href = '/register.html';
               </script>
             </head>
@@ -321,8 +347,14 @@ app.post('/zmiana-hasla', async (req, res) => {
       return res.status(400).send('Email missing from session. Please try again.');
     }
 
-    if (newPassword.length < 6) {
-      return res.status(400).send('Password must be at least 6 characters long');
+    if (newPassword.length < 8) {
+      return res.status(400).send('Password must be at least 8 characters long');
+    }
+    if(!checkUpperCase(newPassword)){
+      return res.status(400).send('Password must have at least one upper case');
+    }
+    if(!checkSpecialCharacters(newPassword)){
+      return res.status(400).send('Password must have at least one special character');
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
