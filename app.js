@@ -57,17 +57,6 @@ mongoose.connect(cnctionString, {
   console.error('Failed to connect to MongoDB', err);
 });
 
-// Define a schema and model
-const UserSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  email: String,
-  password: String,
-  pfpPath: String,
-  rating: Number
-});
-const UserModel = mongoose.model('User', UserSchema);
-
 const TutoringSchema = new mongoose.Schema({
   author: {
     type: mongoose.Types.ObjectId,
@@ -428,10 +417,9 @@ app.post('/login-form', async (req, res) => {
                 console.error('Error saving session:', err);
                 return res.status(500).send('Error saving session');
               }
-              // Redirect to password verification page
-
             });
           });
+          // Redirect to password verification page
           return res.redirect('/weryfikacjahasla.html');
         }
         return res.send(` 
@@ -501,11 +489,14 @@ app.post('/add-tutoring-form', async (req, res) => {
 app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
   try {
     const userId = req.session.user._id;
-    let tutorings = await TutoringModel.find({ 
-      author: { $ne: userId }, 
-      status: 'pending' 
+
+    // Fetch tutorings excluding those authored by the current user and those with a pending status
+    let tutorings = await TutoringModel.find({
+      author: { $ne: userId },
+      status: 'pending'
     }).populate('author').populate('tutor');
 
+    // Prepare the search criteria
     const searchCriteria = [
       { key: 'author.firstName', value: req.body.firstName },
       { key: 'author.lastName', value: req.body.lastName },
@@ -513,21 +504,28 @@ app.post('/search-tutoring-form', isAuthenticated, async (req, res) => {
       { key: 'unit', value: req.body.unit },
       { key: 'topic', value: req.body.topic }
     ];
+
+    // Filter out any empty or null criteria
     const filteredCriteria = searchCriteria.filter(criteria => criteria.value);
+
+    // Apply filtering only if criteria exist
     if (filteredCriteria.length > 0) {
       const options = {
-        keys: filteredCriteria.map(criteria => criteria.key),
+        keys: filteredCriteria.map(criteria => criteria.key), // Use keys from filtered criteria
         threshold: 0.4,
         distance: 100,
       };
+
+      // Create a single Fuse instance with the compiled criteria keys
       const fuse = new Fuse(tutorings, options);
-      let results = tutorings;
-      filteredCriteria.forEach(criteria => {
-        const fuse = new Fuse(results, { keys: [criteria.key], threshold: 0.4, distance: 100 });
-        results = fuse.search(criteria.value).map(result => result.item);
-      });
-      tutorings = results;
+
+      // Perform a single search using the provided criteria values
+      tutorings = fuse.search({
+        $and: filteredCriteria.map(criteria => ({ [criteria.key]: criteria.value }))
+      }).map(result => result.item);
     }
+
+    // Render the search results to the 'wyniki' view
     return res.render('wyniki', { items: tutorings });
   } catch (err) {
     console.error('Failed to retrieve tutorings:', err);

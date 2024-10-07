@@ -60,6 +60,7 @@ aside > img {
     width: 22rem;
     height: 22rem;
     border-radius: 100%;
+    object-fit: cover;
 }
 
 .info_container {
