@@ -57,6 +57,16 @@ mongoose.connect(cnctionString, {
   console.error('Failed to connect to MongoDB', err);
 });
 
+// Define a schema and model
+const UserSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
+  email: String,
+  password: String,
+  pfpPath: String,
+  rating: Number
+});
+const UserModel = mongoose.model('User', UserSchema);
 
 const TutoringSchema = new mongoose.Schema({
   author: {
