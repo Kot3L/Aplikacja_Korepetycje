@@ -2,7 +2,7 @@ main {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-top: 10vh;
+    margin-top: 10px;
 }
 
 /* Form */
@@ -20,7 +20,7 @@ input, textarea {
     background-color: #D4D4D8;
     color: rgb(0, 0, 0);
     border: none;
-    height: 7vh;
+    height: 45px;
     width: 20rem;
     padding: .5rem;
     border-radius: 2px;
@@ -31,7 +31,7 @@ select {
     background-color: #D4D4D8;
     color: rgb(0, 0, 0);
     border: none;
-    height: 7vh;
+    height: 45px;
     width: 21rem;
     padding: .5rem;
     border-radius: 2px;
